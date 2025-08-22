@@ -14,14 +14,31 @@ class DatabaseKasir {
     return openDatabase(
       join(path, "app.db"), // => lokasi database
       onCreate: (db, version) async {
+        //aktifkan foreign key
+        await db.execute("PRAGMA foreign_keys = ON");
+
         //buat tabel kategori
         await db.execute('''
-CREATE TABLE KATEGORI(
-id INTEGER  PRIMARY KEY AUTOINCREMENT, 
-nama TEXT NOT NULL
-)
-''');
+        CREATE TABLE KATEGORI(
+        id INTEGER  PRIMARY KEY AUTOINCREMENT, 
+        nama TEXT NOT NULL
+        )
+        ''');
+
+        await db.execute('''
+        CREATE TABLE PRODUK(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nama TEXT NOT NULL,
+        kategori_id INTEGER NOT NULL,
+        harga_dasar REAL NOT NULL,
+        harga_jual REAL NOT NULL,
+        stok INTEGER DEFAULT 0,
+        gambar TEXT,
+        FOREIGN KEY (kategori_id) REFERENCES KATEGORI(id) ON DELETE CASCADE
+        )
+        ''');
       },
+
       version: 1,
     );
   }
@@ -32,21 +49,92 @@ nama TEXT NOT NULL
     return _db!;
   }
 
+  //CRUD KATEGORI
   //post
   static Future<int> postKategori(String nama) async {
     final db = await getDB();
     //masukkan data ke tabel kategori
-    return await db.insert("Kategori", {"Nama": nama});
+    return await db.insert("KATEGORI", {"nama": nama});
   }
 
   //get
   static Future<List<Map<String, dynamic>>> getKategori() async {
     final db = await getDB();
-    return await db.query("Kategori", orderBy: "id ASC"); // => urutan
+    return await db.query("KATEGORI", orderBy: "id ASC"); // => urutan
   }
 
+  //delete
   static Future<int> deleteKategori(int id) async {
     final db = await getDB();
-    return await db.delete("Kategori", where: "id = ?", whereArgs: [id]);
+    return await db.delete("KATEGORI", where: "id = ?", whereArgs: [id]);
+  }
+
+  //CRUD PRODUK
+  static Future<int> postProduk({
+    required String nama,
+    required int kategoriId,
+    required double hargaDasar,
+    required double hargaJual,
+    int stok = 0,
+    String? gambar,
+  }) async {
+    final db = await getDB();
+    return await db.insert("PRODUK", {
+      "nama": nama,
+      "kategori_id": kategoriId,
+      "harga_dasar": hargaDasar,
+      "harga_jual": hargaJual,
+      "stok": stok,
+      "gambar": gambar,
+    });
+  }
+
+  //get
+  static Future<List<Map<String, dynamic>>> getProduk() async {
+    final db = await getDB();
+    return await db.query("PRODUK", orderBy: "id ASC"); // => urutan
+  }
+
+  //delete
+  static Future<int> deleteProduk(int id) async {
+    final db = await getDB();
+    return await db.delete("PRODUK", where: "id = ?", whereArgs: [id]);
+  }
+
+  //Update Produk
+  static Future<int> updateProduk({
+    required int id,
+    required String nama,
+    required int kategoriId,
+    required double hargaDasar,
+    required double hargaJual,
+    int stok = 0,
+    String? gambar,
+  }) async {
+    final db = await getDB();
+    return await db.update(
+      "PRODUK",
+      {
+        "nama": nama,
+        "kategori_id": kategoriId,
+        "harga_dasar": hargaDasar,
+        "harga_jual": hargaJual,
+        "stok": stok,
+        "gambar": gambar,
+      },
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
+
+  //get produk dengan kategori
+  static Future<List<Map<String, dynamic>>> getProdukKategori() async {
+    final db = await getDB();
+    return await db.rawQuery('''
+    SELECT p.id, p.nama, p.harga_dasar, p.harga_jual, p.stok, p.gambar, k.nama as nama_kategori
+    FROM PRODUK p
+    JOIN KATEGORI k ON p.kategori_id = k.id
+    ORDER BY p.id ASC
+      ''');
   }
 }

@@ -30,40 +30,37 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Kasirnyong",
-            style: GoogleFonts.lobster(
-              fontSize: 20,
-              color: Colors.grey.shade900,
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Kasirnyong",
+          style: GoogleFonts.lobster(
+            fontSize: 20,
+            color: Colors.grey.shade900,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Row(
+              children: [
+                Text(
+                  "Transaksi Hari Ini :",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 10),
+                Text("20 item", style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: Row(
-                children: [
-                  Text(
-                    "Hari ini terjual :",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "20 Item",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        drawer: MenuDrawer(),
-        backgroundColor: Colors.white,
-        body: SafeArea(
+        ],
+      ),
+      drawer: MenuDrawer(),
+      backgroundColor: Colors.white,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -251,15 +248,15 @@ class _HomepageState extends State<Homepage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.deepPurple,
-          onPressed: () => Get.to(
-            () => Order(),
-            transition: Transition.rightToLeft,
-            duration: Duration(milliseconds: 300),
-          ),
-          child: Icon(Icons.point_of_sale, color: Colors.white),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepPurple,
+        onPressed: () => Get.to(
+          () => Order(),
+          transition: Transition.rightToLeft,
+          duration: Duration(milliseconds: 300),
         ),
+        child: Icon(Icons.point_of_sale, color: Colors.white),
       ),
     );
   }

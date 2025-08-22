@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/homepage.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Splash extends StatefulWidget {
@@ -31,14 +32,11 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 300),
-          pageBuilder: (context, animation, secondaryAnimation) => Intro(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        ),
+
+      Get.off(
+        () => WhiteScreen(),
+        transition: Transition.fade,
+        duration: Duration(milliseconds: 300),
       );
     });
   }
@@ -83,34 +81,19 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   }
 }
 
-class Intro extends StatefulWidget {
-  const Intro({super.key});
-
-  @override
-  State<Intro> createState() => _IntroState();
-}
-
-class _IntroState extends State<Intro> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => Homepage(),
-          transitionDuration: const Duration(milliseconds: 2000),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        ),
-      );
-    });
-  }
+class WhiteScreen extends StatelessWidget {
+  const WhiteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    Future.delayed(Duration(milliseconds: 400), () {
+      Get.off(
+        () => Homepage(),
+        transition: Transition.fadeIn,
+        duration: Duration(milliseconds: 2500),
+      );
+    });
+
+    return Scaffold(backgroundColor: Colors.white);
   }
 }

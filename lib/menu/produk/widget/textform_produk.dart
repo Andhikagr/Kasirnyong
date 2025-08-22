@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 class TextformProduk extends StatelessWidget {
   final String label;
+  final TextEditingController controller;
 
-  const TextformProduk({super.key, required this.label});
+  const TextformProduk({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext contex) {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
+        controller: controller,
         enableSuggestions: false,
         style: TextStyle(decoration: TextDecoration.none),
         decoration: InputDecoration(
