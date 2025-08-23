@@ -5,19 +5,35 @@ import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/menu/produk/widget/button_produk.dart';
-import 'package:food_app/menu/produk/widget/copy_gambar.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/menu/produk/widget/textform_produk.dart';
 import 'package:get/get.dart';
 
-class TambahProduk extends StatefulWidget {
-  const TambahProduk({super.key});
+class EditProduk extends StatefulWidget {
+  final int? produkId;
+  final String? nama;
+  final String? kategoriNama;
+  final double? hargaDasar;
+  final double? hargaJual;
+  final int? stok;
+  final String? gambar;
+
+  const EditProduk({
+    super.key,
+    this.produkId,
+    this.nama,
+    this.kategoriNama,
+    this.hargaDasar,
+    this.hargaJual,
+    this.stok,
+    this.gambar,
+  });
 
   @override
-  State<TambahProduk> createState() => _TambahProdukState();
+  State<EditProduk> createState() => _EditProdukState();
 }
 
-class _TambahProdukState extends State<TambahProduk> {
+class _EditProdukState extends State<EditProduk> {
   final kategoriAdd = Get.find<KategoriControl>();
   String? pilihKategoriNama;
   final TextEditingController simpanCOntroller = TextEditingController();
@@ -25,9 +41,20 @@ class _TambahProdukState extends State<TambahProduk> {
   final TextEditingController hargaDasarController = TextEditingController();
   final TextEditingController hargaJualController = TextEditingController();
   final TextEditingController stokController = TextEditingController();
-
   //simpan gambar
   String? gambarPath;
+
+  @override
+  void initState() {
+    super.initState();
+    // Prefill data jika ada
+    namaController.text = widget.nama ?? '';
+    hargaDasarController.text = widget.hargaDasar!.toRupiah();
+    hargaJualController.text = widget.hargaJual!.toRupiah();
+    stokController.text = widget.stok?.toString() ?? '';
+    pilihKategoriNama = widget.kategoriNama;
+    gambarPath = widget.gambar;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +66,7 @@ class _TambahProdukState extends State<TambahProduk> {
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
-          title: Text("Tambah Produk"),
+          title: Text("Edit Produk"),
           centerTitle: true,
         ),
         body: Padding(
@@ -59,29 +86,20 @@ class _TambahProdukState extends State<TambahProduk> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 SizedBox(height: 7),
-                Obx(
-                  () => DropdownButtonFormField<String>(
-                    value: pilihKategoriNama,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                DropdownButtonFormField<String>(
+                  value: pilihKategoriNama,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    hint: const Text("Pilih Kategori"),
-                    items: kategoriAdd.kategoriList
-                        .map(
-                          (e) => DropdownMenuItem<String>(
-                            value: e["nama"],
-                            child: Text(e["nama"]),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        pilihKategoriNama = val;
-                      });
-                    },
                   ),
+                  items: [
+                    DropdownMenuItem(
+                      value: pilihKategoriNama,
+                      child: Text(pilihKategoriNama ?? "-"),
+                    ),
+                  ],
+                  onChanged: null,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
@@ -207,43 +225,8 @@ class _TambahProdukState extends State<TambahProduk> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
                       onTap: () async {
-                        if (namaController.text.isEmpty) {
-                          Get.snackbar(
-                            "Error",
-                            "Nama produk harus diisi",
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Colors.white,
-                            colorText: Colors.black,
-                          );
-                          return;
-                        }
-
-                        if (hargaDasarController.text.isEmpty) {
-                          Get.snackbar(
-                            "Error",
-                            "Harga dasar harus diisi",
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Colors.white,
-                            colorText: Colors.black,
-                          );
-                          return;
-                        }
-
-                        if (hargaJualController.text.isEmpty) {
-                          Get.snackbar(
-                            "Error",
-                            "Harga jual harus diisi",
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Colors.white,
-                            colorText: Colors.black,
-                          );
-                          return;
-                        }
-
-                        if (gambarPath != null) {
-                          gambarPath = await simpanGambar(gambarPath!);
-                        }
-                        await DatabaseKasir.postProduk(
+                        await DatabaseKasir.updateProduk(
+                          id: widget.produkId!,
                           nama: namaController.text,
                           kategoriNama: pilihKategoriNama!,
                           hargaDasar: hargaDasarController.text.toDoubleClean(),
@@ -251,17 +234,9 @@ class _TambahProdukState extends State<TambahProduk> {
                           stok: int.tryParse(stokController.text) ?? 0,
                           gambar: gambarPath,
                         );
-                        namaController.clear();
-                        hargaDasarController.clear();
-                        hargaJualController.clear();
-                        stokController.clear();
-                        gambarPath = null;
-                        setState(() {
-                          pilihKategoriNama = null;
-                        });
                         Get.snackbar(
                           "Sukses",
-                          "produk berhasil ditambahkan",
+                          "produk berhasil diperbaharui",
                           snackPosition: SnackPosition.TOP,
                           backgroundColor: Colors.white,
                           colorText: Colors.black,
@@ -270,10 +245,9 @@ class _TambahProdukState extends State<TambahProduk> {
                         final produkLoad = Get.find<ProdukControl>();
                         produkLoad.loadProduk();
                       },
-
                       child: Center(
                         child: Text(
-                          "Simpan",
+                          "Update",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
