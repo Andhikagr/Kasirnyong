@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:food_app/controller/kategori_control.dart';
+import 'package:food_app/controller/produk_control.dart';
+import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/order.dart';
 import 'package:food_app/widget/drawer_list.dart';
 
-import 'package:food_app/widget/menu_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,17 +20,26 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   //menentukan posisi awal index
   int selectedIndex = 0;
-  final List<String> menu = ["Makanan", "Minuman", "Snack"];
+  final kategoriAdd = Get.find<KategoriControl>();
+  final produkLoad = Get.find<ProdukControl>();
 
+  //semua nama kategori
+  List<String> get menu =>
+      kategoriAdd.kategoriList.map((e) => e["nama"] as String).toList();
+  //semua produk
+  List<Map<String, dynamic>> get produkList => produkLoad.produkList;
+
+  //produk filter
   List<Map<String, dynamic>> get filteredMenu {
+    if (produkList.isEmpty) return [];
     final selectedCategory = menu[selectedIndex];
-    if (selectedCategory == "All") {
-      return menuList;
-    }
-    return menuList
-        .where((item) => item["Category"] == selectedCategory)
+    return produkList
+        .where((item) => item["kategori_nama"] == selectedCategory)
         .toList();
   }
+
+  RxInt totalItem = 0.obs;
+  RxDouble totalBayar = 0.0.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -64,66 +77,87 @@ class _HomepageState extends State<Homepage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  width: double.infinity,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.deepPurple,
-                    border: Border.all(color: Colors.deepPurple),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Bayar",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                child: Obx(
+                  () => Container(
+                    padding: EdgeInsets.all(10),
+                    width: double.infinity,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.deepPurple,
+                      border: Border.all(color: Colors.deepPurple),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Bayar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Rp.",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              totalBayar.value.toRupiah(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "(${totalItem.value} Item)",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: () {
+                              totalBayar.value = 0.0;
+                              totalItem.value = 0;
+                            },
+                            child: Ink(
+                              height: 40,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Reset",
+                                  style: TextStyle(
+                                    color: Colors.deepPurple,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(width: 5),
-                          Text(
-                            "0",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            "(0 Item)",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-
               SizedBox(height: 20),
               SizedBox(
                 height: 60,
@@ -150,17 +184,16 @@ class _HomepageState extends State<Homepage> {
                               width: 120,
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Colors.deepPurple
+                                      : Colors.grey.shade300,
+                                  width: 2,
+                                ),
                                 color: isSelected
                                     ? Colors.deepPurple
                                     : Colors.white,
                                 borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    blurRadius: 1,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
                               ),
                               child: Center(
                                 child: Text(
@@ -168,7 +201,7 @@ class _HomepageState extends State<Homepage> {
                                   style: TextStyle(
                                     color: isSelected
                                         ? Colors.white
-                                        : Colors.black87,
+                                        : Colors.deepPurple,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -185,64 +218,99 @@ class _HomepageState extends State<Homepage> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: GridView.builder(
-                    padding: EdgeInsets.only(bottom: 15),
-                    itemCount: filteredMenu.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 30,
-                      crossAxisSpacing: 15,
-                      childAspectRatio: 0.9,
-                    ),
-                    itemBuilder: (context, index) {
-                      final burgerList = filteredMenu[index];
-                      return Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey.shade300),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 1,
-                              offset: Offset(1, 3),
-                            ),
-                          ],
-                        ),
-
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              height: 130,
-                              width: 150,
-                              child: Image.asset(
-                                burgerList["image"],
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                burgerList["label"],
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                burgerList["price"],
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
+                  child: Obx(() {
+                    final items = filteredMenu;
+                    if (items.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "Produk masih kosong",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade600,
+                            fontSize: 16,
+                          ),
                         ),
                       );
-                    },
-                  ),
+                    }
+                    return GridView.builder(
+                      padding: EdgeInsets.only(bottom: 15),
+                      itemCount: items.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 30,
+                        crossAxisSpacing: 15,
+                        childAspectRatio: 0.95,
+                      ),
+                      itemBuilder: (context, index) {
+                        final produkView = items[index];
+                        return GestureDetector(
+                          onTap: () {
+                            final harga = (produkView["harga_jual"] as num)
+                                .toDouble();
+                            totalBayar.value += harga;
+                            totalItem.value += 1;
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 2,
+                              ),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 1,
+                                  offset: Offset(1, 2),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 130,
+                                    width: 150,
+                                    child: produkView["gambar"] != null
+                                        ? Image.file(
+                                            File(produkView["gambar"]),
+                                            fit: BoxFit.contain,
+                                          )
+                                        : Icon(
+                                            Icons.image_not_supported,
+                                            size: 50,
+                                          ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      produkView["nama"] ?? "",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      (produkView["harga_jual"] as num)
+                                          .toRupiah(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
                 ),
               ),
             ],
