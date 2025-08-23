@@ -1,3 +1,4 @@
+import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/database/database.dart';
 import 'package:get/get.dart';
 
@@ -23,8 +24,11 @@ class KategoriControl extends GetxController {
   }
 
   //delete
-  void hapusKategori(int id) async {
-    await DatabaseKasir.deleteKategori(id);
+  void hapusKategori(String nama) async {
+    await DatabaseKasir.deleteKategori(nama);
     loadKategori();
+
+    final produkLoad = Get.find<ProdukControl>();
+    produkLoad.loadProduk();
   }
 }

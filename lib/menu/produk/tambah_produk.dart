@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
+import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/menu/produk/widget/button_produk.dart';
+import 'package:food_app/menu/produk/widget/copy_gambar.dart';
+import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/menu/produk/widget/textform_produk.dart';
 import 'package:get/get.dart';
 
@@ -14,12 +19,15 @@ class EditProduk extends StatefulWidget {
 
 class _EditProdukState extends State<EditProduk> {
   final kategoriAdd = Get.find<KategoriControl>();
-  int? pilihKategoriId;
+  String? pilihKategoriNama;
   final TextEditingController simpanCOntroller = TextEditingController();
   final TextEditingController namaController = TextEditingController();
   final TextEditingController hargaDasarController = TextEditingController();
   final TextEditingController hargaJualController = TextEditingController();
   final TextEditingController stokController = TextEditingController();
+
+  //simpan gambar
+  String? gambarPath;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +58,10 @@ class _EditProdukState extends State<EditProduk> {
                   "Kategori",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 7),
                 Obx(
-                  () => DropdownButtonFormField<int>(
+                  () => DropdownButtonFormField<String>(
+                    value: pilihKategoriNama,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -61,15 +70,15 @@ class _EditProdukState extends State<EditProduk> {
                     hint: const Text("Pilih Kategori"),
                     items: kategoriAdd.kategoriList
                         .map(
-                          (e) => DropdownMenuItem<int>(
-                            value: e["id"],
+                          (e) => DropdownMenuItem<String>(
+                            value: e["nama"],
                             child: Text(e["nama"]),
                           ),
                         )
                         .toList(),
                     onChanged: (val) {
                       setState(() {
-                        pilihKategoriId = val;
+                        pilihKategoriNama = val;
                       });
                     },
                   ),
@@ -78,11 +87,13 @@ class _EditProdukState extends State<EditProduk> {
                 TextformProduk(
                   label: "Harga Dasar",
                   controller: hargaDasarController,
+                  isCurrency: true,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
                   label: "Harga Jual",
                   controller: hargaJualController,
+                  isCurrency: true,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
@@ -99,8 +110,9 @@ class _EditProdukState extends State<EditProduk> {
                     hargaDasarController.clear();
                     hargaJualController.clear();
                     stokController.clear();
+                    gambarPath = null;
                     setState(() {
-                      pilihKategoriId = null;
+                      pilihKategoriNama = null;
                     });
                   },
                   child: Text("Clear"),
@@ -121,6 +133,23 @@ class _EditProdukState extends State<EditProduk> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey.shade400),
                         ),
+                        child: gambarPath != null
+                            ? Image.file(File(gambarPath!), fit: BoxFit.contain)
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/nophotos.png",
+                                    fit: BoxFit.cover,
+                                    width: 100,
+                                  ),
+                                  Text(
+                                    "Tidak ada gambar terpilih",
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                     SizedBox(width: 25),
@@ -130,11 +159,22 @@ class _EditProdukState extends State<EditProduk> {
                           ButtonProduk(
                             label: "Pilih Gambar",
                             icons: Icons.photo,
+                            onImage: (path) {
+                              setState(() {
+                                gambarPath = path;
+                              });
+                            },
                           ),
+
                           SizedBox(height: 20),
                           ButtonProduk(
                             label: "Ambil Foto",
                             icons: Icons.camera_alt,
+                            onImage: (path) {
+                              setState(() {
+                                gambarPath = path;
+                              });
+                            },
                           ),
                         ],
                       ),
@@ -146,7 +186,7 @@ class _EditProdukState extends State<EditProduk> {
           ),
         ),
 
-        bottomNavigationBar: pilihKategoriId != null
+        bottomNavigationBar: pilihKategoriNama != null
             ? Container(
                 height: 80,
                 decoration: BoxDecoration(
@@ -159,7 +199,6 @@ class _EditProdukState extends State<EditProduk> {
                     ),
                   ],
                 ),
-
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Material(
@@ -168,21 +207,70 @@ class _EditProdukState extends State<EditProduk> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
                       onTap: () async {
-                        if (pilihKategoriId != null &&
-                            namaController.text.isNotEmpty) {
-                          await DatabaseKasir.postProduk(
-                            nama: namaController.text,
-                            kategoriId: pilihKategoriId!,
-                            hargaDasar:
-                                double.tryParse(hargaDasarController.text) ?? 0,
-                            hargaJual:
-                                double.tryParse(hargaJualController.text) ?? 0,
-                            stok: int.tryParse(stokController.text) ?? 0,
-                            gambar: null,
+                        if (namaController.text.isEmpty) {
+                          Get.snackbar(
+                            "Error",
+                            "Nama produk harus diisi",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.white,
+                            colorText: Colors.black,
                           );
-                          Get.back();
+                          return;
                         }
+
+                        if (hargaDasarController.text.isEmpty) {
+                          Get.snackbar(
+                            "Error",
+                            "Harga dasar harus diisi",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.white,
+                            colorText: Colors.black,
+                          );
+                          return;
+                        }
+
+                        if (hargaJualController.text.isEmpty) {
+                          Get.snackbar(
+                            "Error",
+                            "Harga jual harus diisi",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.white,
+                            colorText: Colors.black,
+                          );
+                          return;
+                        }
+
+                        if (gambarPath != null) {
+                          gambarPath = await simpanGambar(gambarPath!);
+                        }
+                        await DatabaseKasir.postProduk(
+                          nama: namaController.text,
+                          kategoriNama: pilihKategoriNama!,
+                          hargaDasar: hargaDasarController.text.toDoubleClean(),
+                          hargaJual: hargaJualController.text.toDoubleClean(),
+                          stok: int.tryParse(stokController.text) ?? 0,
+                          gambar: gambarPath,
+                        );
+                        namaController.clear();
+                        hargaDasarController.clear();
+                        hargaJualController.clear();
+                        stokController.clear();
+                        gambarPath = null;
+                        setState(() {
+                          pilihKategoriNama = null;
+                        });
+                        Get.snackbar(
+                          "Sukses",
+                          "produk berhasil ditambahkan",
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.white,
+                          colorText: Colors.black,
+                        );
+
+                        final produkLoad = Get.find<ProdukControl>();
+                        produkLoad.loadProduk();
                       },
+
                       child: Center(
                         child: Text(
                           "Simpan",

@@ -46,48 +46,50 @@ class _KategoriState extends State<Kategori> {
                   ],
                 ),
                 child: ListTile(
-                  leading: Icon(Icons.category),
+                  leading: Icon(Icons.storefront_rounded),
                   title: Text(
                     kategori['nama'], // sesuai field tabel
 
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  trailing: Icon(Icons.delete, color: Colors.red),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            "Apakah kamu yakin?",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                kategoriLoad.hapusKategori(kategori["id"]);
-                                Get.back();
-                              },
-                              child: Text(
-                                "Ya",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              "Apakah kamu yakin?",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            TextButton(
-                              onPressed: () => Get.back(),
-                              child: Text(
-                                "Batal",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  kategoriLoad.hapusKategori(kategori["nama"]);
+                                  Get.back();
+                                },
+                                child: Text(
+                                  "Ya",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                              TextButton(
+                                onPressed: () => Get.back(),
+                                child: Text(
+                                  "Batal",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               );
             },

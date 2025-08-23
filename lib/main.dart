@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
+import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/splash.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   Get.put(KategoriControl());
+  Get.put(ProdukControl());
   runApp(MyApp());
 }
 

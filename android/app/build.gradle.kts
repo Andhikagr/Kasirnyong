@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.food_app"
+    namespace = "com.example.kasirnyong"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
