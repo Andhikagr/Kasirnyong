@@ -5,6 +5,7 @@ import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/order.dart';
+import 'package:food_app/widget/animation_addchart.dart';
 import 'package:food_app/widget/drawer_list.dart';
 
 import 'package:get/get.dart';
@@ -41,6 +42,30 @@ class _HomepageState extends State<Homepage> {
   RxInt totalItem = 0.obs;
   RxDouble totalBayar = 0.0.obs;
 
+  //untuk mndapatkan posisi dan ukuran widget
+  GlobalKey bayarKey = GlobalKey();
+
+  //animasi
+  void flyAnimation(Offset startPos, Offset endPos, Widget flyWidget) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (_) {
+        return AnimatedFlyWidget(
+          start: startPos,
+          end: endPos,
+          child: flyWidget,
+          onComplete: () => entry.remove(),
+        );
+      },
+    );
+    overlay.insert(entry);
+  }
+
+  //simpan pesanan
+  RxList<Map<String, dynamic>> pesananList = <Map<String, dynamic>>[].obs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,19 +79,7 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Row(
-              children: [
-                Text(
-                  "Transaksi Hari Ini :",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 10),
-                Text("20 item", style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
+          //
         ],
       ),
       drawer: MenuDrawer(),
@@ -82,6 +95,7 @@ class _HomepageState extends State<Homepage> {
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
                 child: Obx(
                   () => Container(
+                    key: bayarKey,
                     padding: EdgeInsets.all(10),
                     width: double.infinity,
                     height: 150,
@@ -161,57 +175,59 @@ class _HomepageState extends State<Homepage> {
               SizedBox(height: 20),
               SizedBox(
                 height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: menu.length,
-                  itemBuilder: (context, index) {
-                    final menuItem = menu[index];
-                    final bool isSelected = selectedIndex == index;
-                    return Row(
-                      children: [
-                        if (index == 0) SizedBox(width: 10),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(5),
-                              height: 60,
-                              width: 120,
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                border: Border.all(
+                child: Obx(
+                  () => ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: menu.length,
+                    itemBuilder: (context, index) {
+                      final menuItem = menu[index];
+                      final bool isSelected = selectedIndex == index;
+                      return Row(
+                        children: [
+                          if (index == 0) SizedBox(width: 10),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                height: 60,
+                                width: 120,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.deepPurple
+                                        : Colors.grey.shade300,
+                                    width: 2,
+                                  ),
                                   color: isSelected
                                       ? Colors.deepPurple
-                                      : Colors.grey.shade300,
-                                  width: 2,
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                color: isSelected
-                                    ? Colors.deepPurple
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  menuItem,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.deepPurple,
-                                    fontWeight: FontWeight.bold,
+                                child: Center(
+                                  child: Text(
+                                    menuItem,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -237,74 +253,125 @@ class _HomepageState extends State<Homepage> {
                       itemCount: items.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 30,
+                        mainAxisSpacing: 15,
                         crossAxisSpacing: 15,
-                        childAspectRatio: 0.95,
+                        childAspectRatio: 0.8,
                       ),
                       itemBuilder: (context, index) {
                         final produkView = items[index];
+                        final productKey = GlobalKey();
                         return GestureDetector(
                           onTap: () {
                             final harga = (produkView["harga_jual"] as num)
                                 .toDouble();
                             totalBayar.value += harga;
                             totalItem.value += 1;
+
+                            // Tambahkan produk ke list pesanan
+                            final index = pesananList.indexWhere(
+                              (item) => item["nama"] == produkView["nama"],
+                            );
+                            if (index != -1) {
+                              pesananList[index]["jumlah"] += 1;
+                              pesananList[index]["harga"] += harga;
+                            } else {
+                              pesananList.add({
+                                "nama": produkView["nama"],
+                                "harga": harga,
+                                "jumlah": 1,
+                              });
+                            }
+
+                            //posisi target
+                            final renderBoxTarget =
+                                bayarKey.currentContext?.findRenderObject()
+                                    as RenderBox?;
+                            final targetPos =
+                                renderBoxTarget!.localToGlobal(Offset.zero) +
+                                Offset(
+                                  renderBoxTarget.size.width / 3,
+                                  renderBoxTarget.size.height / 3,
+                                );
+
+                            //posisi awal
+                            final renderBoxStart =
+                                productKey.currentContext?.findRenderObject()
+                                    as RenderBox?;
+                            if (renderBoxStart == null) return;
+                            final startPos =
+                                renderBoxStart.localToGlobal(Offset.zero) +
+                                Offset(
+                                  renderBoxStart.size.width / 3,
+                                  renderBoxStart.size.height / 3,
+                                );
+
+                            flyAnimation(
+                              startPos,
+                              targetPos,
+                              Image.file(
+                                File(produkView["gambar"]),
+                                width: 100,
+                              ),
+                            );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: Colors.grey.shade300,
+                                color: Colors.deepPurple.shade300,
                                 width: 2,
                               ),
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.shade500,
+                                  color: Colors.deepPurple,
                                   blurRadius: 1,
                                   offset: Offset(1, 2),
                                 ),
                               ],
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 130,
-                                    width: 150,
-                                    child: produkView["gambar"] != null
-                                        ? Image.file(
-                                            File(produkView["gambar"]),
-                                            fit: BoxFit.contain,
-                                          )
-                                        : Icon(
-                                            Icons.image_not_supported,
-                                            size: 50,
-                                          ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topLeft,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: 150,
+                                  height: 120,
+                                  key: productKey,
+                                  child: produkView["gambar"] != null
+                                      ? Image.file(
+                                          File(produkView["gambar"]),
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                        ),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  child: Align(
+                                    alignment: Alignment.bottomLeft,
                                     child: Text(
                                       produkView["nama"] ?? "",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      (produkView["harga_jual"] as num)
-                                          .toRupiah(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    (produkView["harga_jual"] as num)
+                                        .toRupiah(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         );

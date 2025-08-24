@@ -25,7 +25,9 @@ class _OrderState extends State<Order> {
         title: Text("Detail Pesanan"),
         centerTitle: true,
       ),
-      body: Center(child: Text("Pesanan Kosong")),
+      body: 
+      
+      Center(child: Text("Pesanan Kosong")),
       bottomNavigationBar: Container(
         height: 220,
         decoration: BoxDecoration(

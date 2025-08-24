@@ -36,7 +36,6 @@ class _ProdukState extends State<Produk> {
             (p) => p["kategori_nama"],
           );
           return ListView(
-            padding: EdgeInsets.all(15),
             children: produkByKategori.entries.map((entry) {
               final kategori = entry.key;
               final listProduk = entry.value;
@@ -57,32 +56,25 @@ class _ProdukState extends State<Produk> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 15,
                       crossAxisSpacing: 15,
-                      childAspectRatio: 0.82,
+                      childAspectRatio: 0.85,
                     ),
                     itemBuilder: (context, index) {
                       final produk = listProduk[index];
                       return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: Colors.deepPurple.shade200,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade400,
-                              blurRadius: 1,
-                              offset: Offset(3, 2),
-                            ),
-                          ],
                         ),
                         child: Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.all(5),
-                              height: 80,
+                              padding: EdgeInsets.all(5),
+                              height: 90,
                               width: double.infinity,
                               child: produk["gambar"] != null
                                   ? Image.file(
@@ -92,17 +84,13 @@ class _ProdukState extends State<Produk> {
                                   : Image.asset("assets/nophotos.png"),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 5,
-                              ),
-                              height: 45,
+                              height: 40,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Align(
-                                alignment: Alignment.bottomLeft,
+                                alignment: Alignment.centerLeft,
                                 child: Text(
                                   produk['nama'], //
                                   style: TextStyle(
@@ -113,70 +101,64 @@ class _ProdukState extends State<Produk> {
                               ),
                             ),
 
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    (produk["harga_jual"] as num).toRupiah(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  (produk["harga_jual"] as num).toRupiah(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),
+                                ),
 
-                                  InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(
-                                              "Apakah kamu yakin?",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "Apakah kamu yakin?",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                produkLoad.hapusProduk(
+                                                  produk["id"],
+                                                );
+                                                Get.back();
+                                              },
+                                              child: Text(
+                                                "Ya",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  produkLoad.hapusProduk(
-                                                    produk["id"],
-                                                  );
-                                                  Get.back();
-                                                },
-                                                child: Text(
-                                                  "Ya",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                            TextButton(
+                                              onPressed: () => Get.back(),
+                                              child: Text(
+                                                "Batal",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              TextButton(
-                                                onPressed: () => Get.back(),
-                                                child: Text(
-                                                  "Batal",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Icon(Icons.delete, color: Colors.red),
+                                ),
+                              ],
                             ),
+
                             Divider(),
                             Material(
                               color: Colors.transparent,
@@ -196,7 +178,7 @@ class _ProdukState extends State<Produk> {
                                   ),
                                 ),
                                 child: Ink(
-                                  padding: EdgeInsets.all(3),
+                                  padding: EdgeInsets.all(6),
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.deepPurple,
@@ -205,7 +187,11 @@ class _ProdukState extends State<Produk> {
                                   child: Center(
                                     child: Text(
                                       "Edit produk",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
