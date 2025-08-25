@@ -25,9 +25,34 @@ class _TambahProdukState extends State<TambahProduk> {
   final TextEditingController hargaDasarController = TextEditingController();
   final TextEditingController hargaJualController = TextEditingController();
   final TextEditingController stokController = TextEditingController();
+  final TextEditingController diskonController = TextEditingController();
+  final TextEditingController hargaDiskonController = TextEditingController();
 
   //simpan gambar
   String? gambarPath;
+
+  //fungsi harga diskon
+  void hargaDiskon() {
+    final hargaJual = hargaJualController.text.toDoubleClean();
+    final diskonConvert = diskonController.text.replaceAll("%", "").trim();
+    final diskon = diskonConvert.isEmpty
+        ? 0
+        : double.tryParse(diskonConvert) ?? 0;
+
+    if (diskon > 0) {
+      final hargaAkhir = hargaJual - (hargaJual * (diskon / 100));
+      hargaDiskonController.text = hargaAkhir.toRupiah();
+    } else {
+      hargaDiskonController.clear();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    hargaJualController.addListener(hargaDiskon);
+    diskonController.addListener(hargaDiskon);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +77,7 @@ class _TambahProdukState extends State<TambahProduk> {
                 TextformProduk(
                   label: "Nama Produk",
                   controller: namaController,
+                  readOnly: false,
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -83,23 +109,49 @@ class _TambahProdukState extends State<TambahProduk> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 TextformProduk(
                   label: "Harga Dasar",
                   controller: hargaDasarController,
                   isCurrency: true,
+                  readOnly: false,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
                   label: "Harga Jual",
                   controller: hargaJualController,
                   isCurrency: true,
+                  readOnly: false,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextformProduk(
+                        label: "Stok (opsional)",
+                        controller: stokController,
+                        readOnly: false,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextformProduk(
+                        label: "Diskon (opsional)",
+                        controller: diskonController,
+                        isDiskon: true,
+                        readOnly: false,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
                 TextformProduk(
-                  label: "Stok (opsional)",
-                  controller: stokController,
+                  label: "Harga Diskon",
+                  controller: hargaDiskonController,
+                  isCurrency: true,
+                  readOnly: true,
                 ),
+
                 SizedBox(height: 10),
                 FilledButton(
                   style: FilledButton.styleFrom(
@@ -110,6 +162,7 @@ class _TambahProdukState extends State<TambahProduk> {
                     hargaDasarController.clear();
                     hargaJualController.clear();
                     stokController.clear();
+                    diskonController.clear();
                     gambarPath = null;
                     setState(() {
                       pilihKategoriNama = null;
@@ -117,17 +170,17 @@ class _TambahProdukState extends State<TambahProduk> {
                   },
                   child: Text("Clear"),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Text(
                   "Gambar Produk",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: Container(
-                        height: 180,
+                        height: 150,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -185,9 +238,9 @@ class _TambahProdukState extends State<TambahProduk> {
             ),
           ),
         ),
-
         bottomNavigationBar: pilihKategoriNama != null
             ? Container(
+                padding: EdgeInsets.only(bottom: 10),
                 height: 80,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -240,21 +293,34 @@ class _TambahProdukState extends State<TambahProduk> {
                           return;
                         }
 
+                        double? diskonValue;
+                        final diskonPersen = diskonController.text
+                            .replaceAll("%", "")
+                            .trim();
+                        if (diskonPersen.isNotEmpty) {
+                          diskonValue = double.tryParse(diskonPersen);
+                        } else {
+                          diskonValue = null;
+                        }
+
                         if (gambarPath != null) {
                           gambarPath = await simpanGambar(gambarPath!);
                         }
+
                         await DatabaseKasir.postProduk(
                           nama: namaController.text,
                           kategoriNama: pilihKategoriNama!,
                           hargaDasar: hargaDasarController.text.toDoubleClean(),
                           hargaJual: hargaJualController.text.toDoubleClean(),
                           stok: int.tryParse(stokController.text) ?? 0,
+                          diskon: diskonValue,
                           gambar: gambarPath,
                         );
                         namaController.clear();
                         hargaDasarController.clear();
                         hargaJualController.clear();
                         stokController.clear();
+                        diskonController.clear();
                         gambarPath = null;
                         setState(() {
                           pilihKategoriNama = null;
@@ -266,7 +332,6 @@ class _TambahProdukState extends State<TambahProduk> {
                           backgroundColor: Colors.white,
                           colorText: Colors.black,
                         );
-
                         final produkLoad = Get.find<ProdukControl>();
                         produkLoad.loadProduk();
                       },

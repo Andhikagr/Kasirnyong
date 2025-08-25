@@ -77,7 +77,8 @@ class _ButtonProdukState extends State<ButtonProduk> {
         }
       },
       child: Ink(
-        height: 60,
+        padding: EdgeInsets.all(10),
+        height: 50,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

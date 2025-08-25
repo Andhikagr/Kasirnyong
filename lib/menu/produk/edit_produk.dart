@@ -16,6 +16,7 @@ class EditProduk extends StatefulWidget {
   final double? hargaDasar;
   final double? hargaJual;
   final int? stok;
+  final double? diskon;
   final String? gambar;
 
   const EditProduk({
@@ -26,6 +27,7 @@ class EditProduk extends StatefulWidget {
     this.hargaDasar,
     this.hargaJual,
     this.stok,
+    this.diskon,
     this.gambar,
   });
 
@@ -41,19 +43,43 @@ class _EditProdukState extends State<EditProduk> {
   final TextEditingController hargaDasarController = TextEditingController();
   final TextEditingController hargaJualController = TextEditingController();
   final TextEditingController stokController = TextEditingController();
+  final TextEditingController diskonController = TextEditingController();
+  final TextEditingController hargaDiskonController = TextEditingController();
   //simpan gambar
   String? gambarPath;
+
+  //fungsi harga diskon
+  void hargaDiskon() {
+    final hargaJual = hargaJualController.text.toDoubleClean();
+    final diskonConvert = diskonController.text.replaceAll("%", "").trim();
+    final diskon = diskonConvert.isEmpty
+        ? 0
+        : double.tryParse(diskonConvert) ?? 0;
+
+    if (diskon > 0) {
+      final hargaAkhir = hargaJual - (hargaJual * (diskon / 100));
+      hargaDiskonController.text = hargaAkhir.toRupiah();
+    } else {
+      hargaDiskonController.clear();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     // Prefill data jika ada
-    namaController.text = widget.nama ?? '';
+    namaController.text = widget.nama ?? "";
     hargaDasarController.text = widget.hargaDasar!.toRupiah();
     hargaJualController.text = widget.hargaJual!.toRupiah();
-    stokController.text = widget.stok?.toString() ?? '';
+    stokController.text = widget.stok?.toString() ?? "";
     pilihKategoriNama = widget.kategoriNama;
+    diskonController.text = (widget.diskon != null && widget.diskon! > 0)
+        ? "${widget.diskon!.toInt()}%"
+        : "";
     gambarPath = widget.gambar;
+    hargaJualController.addListener(hargaDiskon);
+    diskonController.addListener(hargaDiskon);
+    hargaDiskon();
   }
 
   @override
@@ -101,22 +127,47 @@ class _EditProdukState extends State<EditProduk> {
                   ],
                   onChanged: null,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 TextformProduk(
                   label: "Harga Dasar",
                   controller: hargaDasarController,
                   isCurrency: true,
+                  readOnly: false,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
                   label: "Harga Jual",
                   controller: hargaJualController,
                   isCurrency: true,
+                  readOnly: false,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextformProduk(
+                        label: "Stok (opsional)",
+                        controller: stokController,
+                        readOnly: false,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextformProduk(
+                        label: "Diskon (opsional)",
+                        controller: diskonController,
+                        isDiskon: true,
+                        readOnly: false,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
                 TextformProduk(
-                  label: "Stok (opsional)",
-                  controller: stokController,
+                  label: "Harga Diskon",
+                  controller: hargaDiskonController,
+                  isCurrency: true,
+                  readOnly: true,
                 ),
                 SizedBox(height: 10),
                 FilledButton(
@@ -135,17 +186,17 @@ class _EditProdukState extends State<EditProduk> {
                   },
                   child: Text("Clear"),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Text(
                   "Gambar Produk",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: Container(
-                        height: 180,
+                        height: 150,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -206,6 +257,7 @@ class _EditProdukState extends State<EditProduk> {
 
         bottomNavigationBar: pilihKategoriNama != null
             ? Container(
+                padding: EdgeInsets.only(bottom: 10),
                 height: 80,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -225,12 +277,22 @@ class _EditProdukState extends State<EditProduk> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
                       onTap: () async {
+                        double? diskonValue;
+                        final diskonPersen = diskonController.text
+                            .replaceAll("%", "")
+                            .trim();
+                        if (diskonPersen.isNotEmpty) {
+                          diskonValue = double.tryParse(diskonPersen);
+                        } else {
+                          diskonValue = null;
+                        }
                         await DatabaseKasir.updateProduk(
                           id: widget.produkId!,
                           nama: namaController.text,
                           kategoriNama: pilihKategoriNama!,
                           hargaDasar: hargaDasarController.text.toDoubleClean(),
                           hargaJual: hargaJualController.text.toDoubleClean(),
+                          diskon: diskonValue,
                           stok: int.tryParse(stokController.text) ?? 0,
                           gambar: gambarPath,
                         );

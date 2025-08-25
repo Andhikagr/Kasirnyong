@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/menu/produk/tambah_produk.dart';
-import 'package:food_app/menu/produk/widget/edit_produk.dart';
+import 'package:food_app/menu/produk/edit_produk.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:get/get.dart';
 
@@ -20,11 +20,11 @@ class _ProdukState extends State<Produk> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-
         title: Text("Produk"),
         centerTitle: true,
       ),
@@ -56,15 +56,22 @@ class _ProdukState extends State<Produk> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 15,
                       crossAxisSpacing: 15,
-                      childAspectRatio: 0.88,
+                      childAspectRatio: 0.75,
                     ),
                     itemBuilder: (context, index) {
                       final produk = listProduk[index];
+
+                      //hitung harga diskon
+                      final hargaJual = (produk["harga_jual"] as num)
+                          .toDouble();
+                      final diskon = (produk["diskon"] ?? 0).toDouble();
+                      final hargaDiskon = diskon > 0
+                          ? (hargaJual - (hargaJual * diskon / 100))
+                          : null;
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
-
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -115,7 +122,6 @@ class _ProdukState extends State<Produk> {
                                     fontSize: 12,
                                   ),
                                 ),
-
                                 InkWell(
                                   onTap: () {
                                     showDialog(
@@ -162,7 +168,64 @@ class _ProdukState extends State<Produk> {
                                 ),
                               ],
                             ),
-
+                            SizedBox(height: 3),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Diskon",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    produk["diskon"] != null
+                                        ? "${produk["diskon"]!.toInt()}%"
+                                        : "-",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Harga Diskon",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 3),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    hargaDiskon != null
+                                        ? hargaDiskon.toRupiah()
+                                        : "-",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             Divider(),
                             Material(
                               color: Colors.transparent,
@@ -178,6 +241,7 @@ class _ProdukState extends State<Produk> {
                                         .toDouble(),
                                     hargaJual: produk["harga_jual"],
                                     stok: produk["stok"],
+                                    diskon: produk["diskon"],
                                     gambar: produk["gambar"],
                                   ),
                                 ),

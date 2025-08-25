@@ -20,21 +20,13 @@ class DatabaseKasir {
       },
       // => lokasi database
       onCreate: (db, version) async {
-        //aktifkan foreign key
-
-        //buat tabel kategori
-        // await db.execute('''
-        // CREATE TABLE KATEGORI(
-        // id INTEGER  PRIMARY KEY AUTOINCREMENT,
-        // nama TEXT NOT NULL
-        // )
-        // ''');
+        //tabel kategori
         await db.execute('''
         CREATE TABLE KATEGORI(
         nama TEXT PRIMARY KEY
         )
         ''');
-
+        //tabel produk
         await db.execute('''
         CREATE TABLE PRODUK(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,22 +34,34 @@ class DatabaseKasir {
         kategori_nama TEXT NOT NULL,
         harga_dasar REAL NOT NULL,
         harga_jual REAL NOT NULL,
+        diskon REAL,
         stok INTEGER DEFAULT 0,
         gambar TEXT,
         FOREIGN KEY (kategori_nama) REFERENCES KATEGORI(nama) ON DELETE CASCADE
         )
         ''');
-        // CREATE TABLE PRODUK(
-        // id INTEGER PRIMARY KEY AUTOINCREMENT,
-        // nama TEXT NOT NULL,
-        // kategori_id INTEGER NOT NULL,
-        // harga_dasar REAL NOT NULL,
-        // harga_jual REAL NOT NULL,
-        // stok INTEGER DEFAULT 0,
-        // gambar TEXT,
-        // FOREIGN KEY (kategori_id) REFERENCES KATEGORI(id) ON DELETE CASCADE
-        // )
-        // ''');
+        //tabel order
+        await db.execute('''
+        CREATE TABLE ORDER_HEADER(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tanggal TEXT NOT NULL,
+        total REAL NOT NULL
+        )
+        ''');
+        //tabel order detail
+        await db.execute('''
+        CREATE TABLE ORDER_DETAIL(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER NOT NULL,
+        produk_id INTEGER NOT NULL,
+        jumlah INTEGER NOT NULL,
+        harga_pcs REAL NOT NULL,
+        diskon REAL,
+        sub_total REAL NOT NULL,
+        FOREIGN KEY (order_id) REFERENCES ORDER_HEADER(id) ON DELETE CASCADE,
+        FOREIGN KEY (produk_id) REFERENCES PRODUK(id) ON DELETE CASCADE
+        )
+        ''');
       },
     );
   }
@@ -94,7 +98,9 @@ class DatabaseKasir {
     required String kategoriNama,
     required double hargaDasar,
     required double hargaJual,
-    int stok = 0,
+    int? stok,
+    double? diskon,
+
     String? gambar,
   }) async {
     final db = await getDB();
@@ -104,6 +110,7 @@ class DatabaseKasir {
       "harga_dasar": hargaDasar,
       "harga_jual": hargaJual,
       "stok": stok,
+      "diskon": diskon,
       "gambar": gambar,
     });
   }
@@ -127,7 +134,8 @@ class DatabaseKasir {
     required String kategoriNama,
     required double hargaDasar,
     required double hargaJual,
-    int stok = 0,
+    int? stok,
+    double? diskon,
     String? gambar,
   }) async {
     final db = await getDB();
@@ -139,6 +147,7 @@ class DatabaseKasir {
         "harga_dasar": hargaDasar,
         "harga_jual": hargaJual,
         "stok": stok,
+        "diskon": diskon,
         "gambar": gambar,
       },
       where: "id = ?",
@@ -150,7 +159,7 @@ class DatabaseKasir {
   static Future<List<Map<String, dynamic>>> getProdukKategori() async {
     final db = await getDB();
     return await db.rawQuery('''
-    SELECT p.id, p.nama, p.harga_dasar, p.harga_jual, p.stok, p.gambar, k.nama as nama_kategori
+    SELECT p.id, p.nama, p.harga_dasar, p.harga_jual, p.stok, p.diskon, p.gambar, k.nama as nama_kategori
     FROM PRODUK p
     JOIN KATEGORI k ON p.kategori_nama = k.nama
     ORDER BY p.id ASC

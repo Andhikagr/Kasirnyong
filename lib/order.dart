@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/widget/total_list.dart';
+import 'package:food_app/widget/pesanan_list.dart';
 import 'package:get/get.dart';
 
 class Order extends StatefulWidget {
@@ -25,9 +25,7 @@ class _OrderState extends State<Order> {
         title: Text("Detail Pesanan"),
         centerTitle: true,
       ),
-      body: 
-      
-      Center(child: Text("Pesanan Kosong")),
+      body: Center(child: Text("Pesanan Kosong")),
       bottomNavigationBar: Container(
         height: 220,
         decoration: BoxDecoration(

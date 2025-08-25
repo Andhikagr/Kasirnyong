@@ -260,11 +260,16 @@ class _HomepageState extends State<Homepage> {
                       itemBuilder: (context, index) {
                         final produkView = items[index];
                         final productKey = GlobalKey();
+                        //hitung harga diskon
+                        final hargaJual = (produkView["harga_jual"] as num)
+                            .toDouble();
+                        final diskon = (produkView["diskon"] ?? 0).toDouble();
+                        final hargaAkhir = diskon > 0
+                            ? (hargaJual - (hargaJual * diskon / 100))
+                            : hargaJual;
                         return GestureDetector(
                           onTap: () {
-                            final harga = (produkView["harga_jual"] as num)
-                                .toDouble();
-                            totalBayar.value += harga;
+                            totalBayar.value += hargaAkhir;
                             totalItem.value += 1;
 
                             // Tambahkan produk ke list pesanan
@@ -273,11 +278,11 @@ class _HomepageState extends State<Homepage> {
                             );
                             if (index != -1) {
                               pesananList[index]["jumlah"] += 1;
-                              pesananList[index]["harga"] += harga;
+                              pesananList[index]["harga"] += hargaAkhir;
                             } else {
                               pesananList.add({
                                 "nama": produkView["nama"],
-                                "harga": harga,
+                                "harga": hargaAkhir,
                                 "jumlah": 1,
                               });
                             }
@@ -357,15 +362,46 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    (produkView["harga_jual"] as num)
-                                        .toRupiah(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+
+                                Column(
+                                  children: [
+                                    if (diskon > 0)
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          hargaJual.toRupiah(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          hargaAkhir.toRupiah(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: diskon > 0
+                                                ? Colors.red
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        Text(
+                                          produkView["diskon"] != null
+                                              ? "${produkView["diskon"]!.toInt()}% Off"
+                                              : " ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
