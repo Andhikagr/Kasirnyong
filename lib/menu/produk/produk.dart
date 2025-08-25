@@ -56,7 +56,7 @@ class _ProdukState extends State<Produk> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 15,
                       crossAxisSpacing: 15,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.88,
                     ),
                     itemBuilder: (context, index) {
                       final produk = listProduk[index];
@@ -64,11 +64,15 @@ class _ProdukState extends State<Produk> {
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          border: Border.all(
-                            color: Colors.deepPurple.shade200,
-                            width: 2,
-                          ),
+
                           borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.deepPurple.shade200,
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [

@@ -255,7 +255,7 @@ class _HomepageState extends State<Homepage> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 15,
                         crossAxisSpacing: 15,
-                        childAspectRatio: 0.8,
+                        childAspectRatio: 0.85,
                       ),
                       itemBuilder: (context, index) {
                         final produkView = items[index];
@@ -318,16 +318,12 @@ class _HomepageState extends State<Homepage> {
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.deepPurple.shade300,
-                                width: 2,
-                              ),
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.deepPurple,
-                                  blurRadius: 1,
-                                  offset: Offset(1, 2),
+                                  color: Colors.deepPurple.shade200,
+                                  blurRadius: 5,
+                                  spreadRadius: 1,
                                 ),
                               ],
                             ),
