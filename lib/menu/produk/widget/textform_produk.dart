@@ -9,6 +9,7 @@ class TextformProduk extends StatelessWidget {
   final bool isCurrency;
   final bool isDiskon;
   final bool readOnly;
+  final String? suffixText;
 
   const TextformProduk({
     super.key,
@@ -17,6 +18,7 @@ class TextformProduk extends StatelessWidget {
     this.isCurrency = false,
     this.isDiskon = false,
     this.readOnly = true,
+    this.suffixText,
   });
 
   @override
@@ -34,8 +36,12 @@ class TextformProduk extends StatelessWidget {
         ],
         controller: controller,
         enableSuggestions: false,
-        style: TextStyle(decoration: TextDecoration.none),
+        style: TextStyle(
+          decoration: TextDecoration.none,
+          fontWeight: FontWeight.bold,
+        ),
         decoration: InputDecoration(
+          suffixText: suffixText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: label,
           labelStyle: TextStyle(fontWeight: FontWeight.bold),

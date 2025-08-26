@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
-import 'package:food_app/order.dart';
+import 'package:food_app/order/order.dart';
 import 'package:food_app/widget/animation_addchart.dart';
 import 'package:food_app/widget/drawer_list.dart';
 
@@ -78,9 +78,7 @@ class _HomepageState extends State<Homepage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          //
-        ],
+        actions: [],
       ),
       drawer: MenuDrawer(),
       backgroundColor: Colors.white,
@@ -92,7 +90,7 @@ class _HomepageState extends State<Homepage> {
             children: [
               SizedBox(height: 10),
               Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Obx(
                   () => Container(
                     key: bayarKey,
@@ -127,13 +125,13 @@ class _HomepageState extends State<Homepage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 5),
-                            Text(
-                              "(${totalItem.value} Item)",
-                              style: TextStyle(
+                            SizedBox(width: 10),
+                            Badge(
+                              label: Text("${totalItem.value}"),
+                              child: Icon(
+                                Icons.shopping_cart,
                                 color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                size: 25,
                               ),
                             ),
                           ],
@@ -277,13 +275,13 @@ class _HomepageState extends State<Homepage> {
                               (item) => item["nama"] == produkView["nama"],
                             );
                             if (index != -1) {
-                              pesananList[index]["jumlah"] += 1;
-                              pesananList[index]["harga"] += hargaAkhir;
+                              (pesananList[index]["jumlah"] as RxInt).value++;
                             } else {
                               pesananList.add({
                                 "nama": produkView["nama"],
+                                "diskon": produkView["diskon"],
                                 "harga": hargaAkhir,
-                                "jumlah": 1,
+                                "jumlah": 1.obs,
                               });
                             }
 
@@ -355,6 +353,8 @@ class _HomepageState extends State<Homepage> {
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
                                       produkView["nama"] ?? "",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
@@ -362,7 +362,6 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                   ),
                                 ),
-
                                 Column(
                                   children: [
                                     if (diskon > 0)
@@ -390,15 +389,15 @@ class _HomepageState extends State<Homepage> {
                                                 : Colors.black87,
                                           ),
                                         ),
-                                        Text(
-                                          produkView["diskon"] != null
-                                              ? "${produkView["diskon"]!.toInt()}% Off"
-                                              : " ",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red,
-                                          ),
-                                        ),
+                                        diskon != 0
+                                            ? Text(
+                                                "${produkView["diskon"]!.toInt()}% Off",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
                                       ],
                                     ),
                                   ],
@@ -418,11 +417,15 @@ class _HomepageState extends State<Homepage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurple,
-        onPressed: () => Get.to(
-          () => Order(),
-          transition: Transition.rightToLeft,
-          duration: Duration(milliseconds: 300),
-        ),
+        onPressed: () {
+          totalBayar.value = 0.0;
+          totalItem.value = 0;
+          Get.to(
+            () => Order(pesananList: pesananList),
+            transition: Transition.rightToLeft,
+            duration: Duration(milliseconds: 300),
+          );
+        },
         child: Icon(Icons.point_of_sale, color: Colors.white),
       ),
     );

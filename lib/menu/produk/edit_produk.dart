@@ -105,6 +105,7 @@ class _EditProdukState extends State<EditProduk> {
                 TextformProduk(
                   label: "Nama Produk",
                   controller: namaController,
+                  readOnly: false,
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -170,22 +171,6 @@ class _EditProdukState extends State<EditProduk> {
                   readOnly: true,
                 ),
                 SizedBox(height: 10),
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                  ),
-                  onPressed: () {
-                    namaController.clear();
-                    hargaDasarController.clear();
-                    hargaJualController.clear();
-                    stokController.clear();
-                    gambarPath = null;
-                    setState(() {
-                      pilihKategoriNama = null;
-                    });
-                  },
-                  child: Text("Clear"),
-                ),
                 SizedBox(height: 5),
                 Text(
                   "Gambar Produk",

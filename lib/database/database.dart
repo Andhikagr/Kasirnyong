@@ -62,6 +62,12 @@ class DatabaseKasir {
         FOREIGN KEY (produk_id) REFERENCES PRODUK(id) ON DELETE CASCADE
         )
         ''');
+        //tabel pajak
+        await db.execute('''
+        CREATE TABLE PAJAK(
+        persen REAL
+        )
+        ''');
       },
     );
   }
@@ -90,6 +96,26 @@ class DatabaseKasir {
   static Future<int> deleteKategori(String nama) async {
     final db = await getDB();
     return await db.delete("KATEGORI", where: "nama = ?", whereArgs: [nama]);
+  }
+
+  //CRUD PAJAK
+  //post
+  static Future<void> setPajak(double persen) async {
+    final db = await getDB();
+    await db.execute(
+      "INSERT OR REPLACE INTO PAJAK(rowid, persen) VALUES (1, ?)",
+      [persen],
+    );
+  }
+
+  //get
+  static Future<num> getPajak() async {
+    final db = await getDB();
+    final result = await db.query("PAJAK", limit: 1);
+    if (result.isNotEmpty) {
+      return result.first["persen"] as num;
+    }
+    return 0; // => urutan
   }
 
   //CRUD PRODUK
