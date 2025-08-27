@@ -287,6 +287,7 @@ class _EditProdukState extends State<EditProduk> {
                           snackPosition: SnackPosition.TOP,
                           backgroundColor: Colors.white,
                           colorText: Colors.black,
+                          icon: Icon(Icons.check_circle, color: Colors.green),
                         );
 
                         final produkLoad = Get.find<ProdukControl>();

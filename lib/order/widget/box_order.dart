@@ -6,6 +6,7 @@ class BoxOrder extends StatelessWidget {
   final double? width;
   final Color? bgColors;
   final Color? textColors;
+  final double? textSize;
 
   const BoxOrder({
     super.key,
@@ -14,6 +15,7 @@ class BoxOrder extends StatelessWidget {
     this.width,
     this.bgColors,
     this.textColors,
+    this.textSize,
   });
 
   @override
@@ -29,7 +31,11 @@ class BoxOrder extends StatelessWidget {
       child: Center(
         child: Text(
           label,
-          style: TextStyle(color: textColors, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: textSize,
+            color: textColors,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

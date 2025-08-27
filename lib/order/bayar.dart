@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/database/database.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/menu/produk/widget/textform_produk.dart';
+import 'package:food_app/order/sukses_bayar.dart';
 import 'package:food_app/order/widget/box_order.dart';
 import 'package:get/get.dart';
 
 class Bayar extends StatefulWidget {
   final RxString totalBayar;
+  final RxList<Map<String, dynamic>> pesananList;
 
-  const Bayar({super.key, required this.totalBayar});
+  const Bayar({super.key, required this.totalBayar, required this.pesananList});
 
   @override
   State<Bayar> createState() => _BayarState();
@@ -55,7 +58,7 @@ class _BayarState extends State<Bayar> {
           foregroundColor: Colors.white,
           leading: IconButton(
             onPressed: () => Get.back(),
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back),
           ),
           title: Text("Pembayaran"),
           centerTitle: true,
@@ -81,7 +84,7 @@ class _BayarState extends State<Bayar> {
                         Text(
                           widget.totalBayar.value,
                           style: TextStyle(
-                            fontSize: 50,
+                            fontSize: 40,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -137,7 +140,7 @@ class _BayarState extends State<Bayar> {
                         () => Text(
                           kembalian.value,
                           style: TextStyle(
-                            fontSize: 35,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Colors.deepPurple,
                           ),
@@ -256,11 +259,66 @@ class _BayarState extends State<Bayar> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: BoxOrder(
-                    height: 60,
-                    bgColors: Colors.deepPurple,
-                    label: "Selesai",
-                    textColors: Colors.white,
+                  child: InkWell(
+                    onTap: () async {
+                      if (widget.pesananList.isNotEmpty) {
+                        final pajakPersen = await DatabaseKasir.getPajak();
+                        if (pilihKategori == null) {
+                          if (_tunaiController.text.isEmpty) {
+                            Get.snackbar(
+                              "Ups",
+                              "Kolom tunai belum di isi",
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.white,
+                              colorText: Colors.black,
+                              icon: Icon(Icons.warning, color: Colors.orange),
+                            );
+                            return;
+                          }
+                          Get.snackbar(
+                            "Ups",
+                            "Pilih metode pembayaran dulu",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.white,
+                            colorText: Colors.black,
+                            icon: Icon(Icons.warning, color: Colors.orange),
+                          );
+                          return;
+                        }
+                        await DatabaseKasir.simpanOrder(
+                          widget.pesananList,
+                          pajakPersen.toDouble(),
+                          pilihKategori!,
+                        );
+
+                        _tunaiController.clear();
+                        setState(() {
+                          pilihKategori = null;
+                        });
+                        widget.pesananList.clear();
+                        widget.totalBayar.value = "0";
+                        Get.to(
+                          () => SuksesBayar(),
+                          transition: Transition.native,
+                          duration: Duration(milliseconds: 300),
+                        );
+                      } else {
+                        Get.snackbar(
+                          "Gagal",
+                          "Tidak ada pesanan untuk disimpan",
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.white,
+                          colorText: Colors.black,
+                          icon: Icon(Icons.dangerous, color: Colors.red),
+                        );
+                      }
+                    },
+                    child: BoxOrder(
+                      height: 60,
+                      bgColors: Colors.deepPurple,
+                      label: "Selesai",
+                      textColors: Colors.white,
+                    ),
                   ),
                 ),
               ),

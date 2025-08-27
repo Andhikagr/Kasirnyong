@@ -35,7 +35,7 @@ class _OrderState extends State<Order> {
   double get subTotal {
     double totalSub = 0;
     for (var itemSub in widget.pesananList) {
-      final harga = itemSub["harga"] as double;
+      final harga = itemSub["harga_akhir"] as double;
       final jumlah = (itemSub["jumlah"] as RxInt).value;
       totalSub += harga * jumlah;
     }
@@ -65,7 +65,7 @@ class _OrderState extends State<Order> {
         foregroundColor: Colors.white,
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios),
+          icon: Icon(Icons.arrow_back),
         ),
         title: Text("Detail Pesanan"),
         actions: [
@@ -174,7 +174,7 @@ class _OrderState extends State<Order> {
                           Row(
                             children: [
                               Text(
-                                (data["harga"] as num).toRupiah(),
+                                (data["harga_jual"] as num).toRupiah(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10,
@@ -201,7 +201,7 @@ class _OrderState extends State<Order> {
                           Obx(() {
                             final item = widget.pesananList[index];
                             final totalItem =
-                                (item["harga"] as double) *
+                                (item["harga_akhir"] as double) *
                                 (item["jumlah"] as RxInt).value;
                             return Text(
                               totalItem.toRupiah(),
@@ -316,11 +316,20 @@ class _OrderState extends State<Order> {
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
                     if (widget.pesananList.isEmpty) {
-                      Get.snackbar("Ups", "Pesanan masih kosong");
+                      Get.snackbar(
+                        "Ups",
+                        "Pesanan masih kosong",
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black,
+                      );
                       return;
                     }
                     Get.to(
-                      () => Bayar(totalBayar: totalBayar.toRupiah().obs),
+                      () => Bayar(
+                        pesananList: widget.pesananList,
+                        totalBayar: totalBayar.toRupiah().obs,
+                      ),
                       transition: Transition.rightToLeft,
                       duration: Duration(milliseconds: 300),
                     );

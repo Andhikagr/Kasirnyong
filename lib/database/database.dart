@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -45,7 +46,10 @@ class DatabaseKasir {
         CREATE TABLE ORDER_HEADER(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tanggal TEXT NOT NULL,
-        total REAL NOT NULL
+        sub_total_order REAL NOT NULL,
+        pajak_persen REAL,
+        total_order REAL NOT NULL,
+        metode_bayar TEXT NOT NULL
         )
         ''');
         //tabel order detail
@@ -55,9 +59,10 @@ class DatabaseKasir {
         order_id INTEGER NOT NULL,
         produk_id INTEGER NOT NULL,
         jumlah INTEGER NOT NULL,
-        harga_pcs REAL NOT NULL,
+        harga_jual REAL NOT NULL,
         diskon REAL,
-        sub_total REAL NOT NULL,
+        harga_akhir REAL NOT NULL,
+        total REAL NOT NULL,
         FOREIGN KEY (order_id) REFERENCES ORDER_HEADER(id) ON DELETE CASCADE,
         FOREIGN KEY (produk_id) REFERENCES PRODUK(id) ON DELETE CASCADE
         )
@@ -68,6 +73,14 @@ class DatabaseKasir {
         persen REAL
         )
         ''');
+        //identitas
+        await db.execute('''
+        CREATE TABLE IDENTITAS(
+        nama TEXT NOT NULL,
+        alamat TEXT NOT NULL,
+        no_telp TEXT NOT NULL
+        )
+        ''');
       },
     );
   }
@@ -76,6 +89,31 @@ class DatabaseKasir {
   static Future<Database> getDB() async {
     _db ??= await _initDB();
     return _db!;
+  }
+
+  //IDENTITAS
+  //set identitas
+  static Future<void> setIdentitas(
+    String nama,
+    String alamat,
+    String noTelp,
+  ) async {
+    final db = await getDB();
+    await db.execute(
+      "INSERT OR REPLACE INTO IDENTITAS(rowid, nama, alamat, noTelp) VALUES (1, ?, ?, ?)",
+      [nama, alamat, noTelp],
+    );
+  }
+
+  //get
+  static Future<Map<String, dynamic>> getIdentitas() async {
+    final db = await getDB();
+    final result = await db.query("IDENTITAS", limit: 1);
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+
+    return {"nama": "", "alamat": "", "no_telp": ""};
   }
 
   //CRUD KATEGORI
@@ -99,7 +137,7 @@ class DatabaseKasir {
   }
 
   //CRUD PAJAK
-  //post
+  //set
   static Future<void> setPajak(double persen) async {
     final db = await getDB();
     await db.execute(
@@ -126,7 +164,6 @@ class DatabaseKasir {
     required double hargaJual,
     int? stok,
     double? diskon,
-
     String? gambar,
   }) async {
     final db = await getDB();
@@ -190,5 +227,92 @@ class DatabaseKasir {
     JOIN KATEGORI k ON p.kategori_nama = k.nama
     ORDER BY p.id ASC
       ''');
+  }
+
+  //save order
+  static Future<void> simpanOrder(
+    RxList<Map<String, dynamic>> pesananList,
+    double pajakPersen,
+    String metodeBayar,
+  ) async {
+    final db = await getDB();
+    await db.transaction((txn) async {
+      double subTotalOrder = 0;
+
+      //hitung total order
+      for (var item in pesananList) {
+        final jumlah = (item["jumlah"] as RxInt).value;
+        final hargaAkhir = (item["harga_akhir"] as num).toDouble();
+        subTotalOrder += (hargaAkhir * jumlah);
+      }
+      //
+      final pajak = (subTotalOrder * pajakPersen) / 100;
+      final totalOrder = subTotalOrder + pajak;
+
+      //simpan ke header
+      final orderId = await txn.insert("ORDER_HEADER", {
+        "tanggal": DateTime.now().toIso8601String(),
+        "sub_total_order": subTotalOrder,
+        "total_order": totalOrder,
+        "pajak_persen": pajakPersen,
+        "metode_bayar": metodeBayar,
+      });
+
+      //simpan detail produk
+      for (var item in pesananList) {
+        final result = await txn.query(
+          "PRODUK",
+          columns: ["id"],
+          where: "nama = ?",
+          whereArgs: [item["nama"]],
+          limit: 1,
+        );
+        if (result.isEmpty) continue;
+        final produkId = result.first["id"] as int;
+        final hargaJual = (item["harga_jual"] as num).toDouble();
+        final diskon = (item["diskon"] as num?);
+        final hargaAkhir = (item["harga_akhir"] as num).toDouble();
+        final jumlah = (item["jumlah"] as RxInt).value;
+        final total = (hargaAkhir * jumlah);
+
+        //insert detail
+        await txn.insert("ORDER_DETAIL", {
+          "order_id": orderId,
+          "produk_id": produkId,
+          "jumlah": jumlah,
+          "harga_jual": hargaJual,
+          "diskon": diskon,
+          "harga_akhir": hargaAkhir,
+          "total": total,
+        });
+      }
+    });
+  }
+
+  //get order
+  static Future<List<Map<String, dynamic>>> getOrders() async {
+    final db = await getDB();
+    final orders = await db.query("ORDER_HEADER", orderBy: "id DESC");
+    List<Map<String, dynamic>> result = [];
+
+    for (var order in orders) {
+      final details = await db.rawQuery(
+        '''
+        SELECT d.jumlah, d.harga_jual, d.diskon, d.harga_akhir, d.total, p.nama as produk_nama FROM ORDER_DETAIL d JOIN PRODUK p ON d.produk_id = p.id
+        WHERE d.order_id = ?
+        ''',
+        [order["id"]],
+      );
+      result.add({
+        "id": order["id"],
+        "tanggal": order["tanggal"],
+        "sub_total_order": order["sub_total_order"],
+        "total_order": order["total_order"],
+        "pajak_persen": order["pajak_persen"],
+        "metode_bayar": order["metode_bayar"],
+        "details": details,
+      });
+    }
+    return result;
   }
 }

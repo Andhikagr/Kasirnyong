@@ -5,9 +5,10 @@ import 'package:food_app/splash.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
   Get.put(KategoriControl());
   Get.put(ProdukControl());
+
   runApp(MyApp());
 }
 

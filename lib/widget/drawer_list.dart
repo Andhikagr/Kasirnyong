@@ -4,23 +4,37 @@ import 'package:food_app/menu/backup.dart';
 import 'package:food_app/menu/item.dart';
 import 'package:food_app/menu/laporan.dart';
 import 'package:food_app/menu/print.dart';
-import 'package:food_app/menu/transaksi.dart';
+import 'package:food_app/nama.dart';
+import 'package:food_app/transaksi/transaksi.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-final List<Map<String, dynamic>> drawerMenu = [
-  {"label": "Transaksi", "icon": Icons.swap_horiz, "page": () => Transaksi()},
-  {"label": "Produk", "icon": Icons.inventory, "page": () => Item()},
-  {"label": "Print", "icon": Icons.print, "page": () => Print()},
-  {"label": "Laporan", "icon": Icons.bar_chart, "page": () => Laporan()},
-  {"label": "Backup Database", "icon": Icons.backup, "page": () => Backup()},
-];
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> drawerMenu = [
+      {
+        "label": "Nama",
+        "icon": Icons.storefront_outlined,
+        "page": () => Nama(),
+      },
+      {
+        "label": "Transaksi",
+        "icon": Icons.swap_horiz,
+        "page": () => Transaksi(),
+      },
+      {"label": "Produk", "icon": Icons.inventory, "page": () => Item()},
+      {"label": "Print", "icon": Icons.print, "page": () => Print()},
+      {"label": "Laporan", "icon": Icons.bar_chart, "page": () => Laporan()},
+      {
+        "label": "Backup Database",
+        "icon": Icons.backup,
+        "page": () => Backup(),
+      },
+    ];
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       precacheImage(AssetImage('assets/brand.png'), context);
       precacheImage(AssetImage('assets/list.png'), context);
@@ -58,12 +72,18 @@ class MenuDrawer extends StatelessWidget {
               ),
 
               child: ListTile(
-                leading: Icon(dataDrawer["icon"]),
-                title: Text("${dataDrawer["label"]}"),
+                leading: Icon(dataDrawer["icon"], color: Colors.grey.shade800),
+                title: Text(
+                  "${dataDrawer["label"]}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   Get.to(
-                    dataDrawer["page"](),
+                    dataDrawer["page"],
                     transition: Transition.native,
                     duration: Duration(milliseconds: 800),
                   );

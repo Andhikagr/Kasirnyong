@@ -35,8 +35,11 @@ class _ProdukState extends State<Produk> {
             produkLoad.produkList,
             (p) => p["kategori_nama"],
           );
+          //urut kategori
+          final sorted = produkByKategori.entries.toList()
+            ..sort((a, b) => a.key.compareTo(b.key));
           return ListView(
-            children: produkByKategori.entries.map((entry) {
+            children: sorted.map((entry) {
               final kategori = entry.key;
               final listProduk = entry.value;
               return Column(

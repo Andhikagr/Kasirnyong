@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
@@ -78,7 +77,19 @@ class _HomepageState extends State<Homepage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [],
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Text(
+              "Transaksi hari ini :",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
       drawer: MenuDrawer(),
       backgroundColor: Colors.white,
@@ -96,7 +107,7 @@ class _HomepageState extends State<Homepage> {
                     key: bayarKey,
                     padding: EdgeInsets.all(10),
                     width: double.infinity,
-                    height: 150,
+                    height: 110,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.deepPurple,
@@ -135,35 +146,6 @@ class _HomepageState extends State<Homepage> {
                               ),
                             ),
                           ],
-                        ),
-                        SizedBox(height: 5),
-                        Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: () {
-                              totalBayar.value = 0.0;
-                              totalItem.value = 0;
-                            },
-                            child: Ink(
-                              height: 40,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Reset",
-                                  style: TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -279,8 +261,9 @@ class _HomepageState extends State<Homepage> {
                             } else {
                               pesananList.add({
                                 "nama": produkView["nama"],
+                                "harga_jual": produkView["harga_jual"],
                                 "diskon": produkView["diskon"],
-                                "harga": hargaAkhir,
+                                "harga_akhir": hargaAkhir,
                                 "jumlah": 1.obs,
                               });
                             }
@@ -357,7 +340,7 @@ class _HomepageState extends State<Homepage> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),

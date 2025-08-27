@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/menu/produk/widget/textform_produk.dart';
+import 'package:food_app/order/widget/format_pajak.dart';
 import 'package:get/get.dart';
 
 class Pajak extends StatefulWidget {
@@ -13,15 +14,6 @@ class Pajak extends StatefulWidget {
 class _PajakState extends State<Pajak> {
   final TextEditingController _pajakController = TextEditingController();
 
-  //format pajak
-  String formatPajak(double pajak) {
-    if (pajak % 1 == 0) {
-      return pajak.toInt().toString();
-    } else {
-      return pajak.toString();
-    }
-  }
-
   Future<void> _loadPajak() async {
     final pajak = await DatabaseKasir.getPajak();
     setState(() {
@@ -33,6 +25,12 @@ class _PajakState extends State<Pajak> {
   void initState() {
     super.initState();
     _loadPajak();
+  }
+
+  @override
+  void dispose() {
+    _pajakController.dispose();
+    super.dispose();
   }
 
   @override
@@ -67,7 +65,9 @@ class _PajakState extends State<Pajak> {
                 child: Material(
                   child: InkWell(
                     onTap: () async {
-                      final pajak = double.tryParse(_pajakController.text) ?? 0;
+                      final pajakText = _pajakController.text.trim();
+
+                      final pajak = double.tryParse(pajakText) ?? 0;
 
                       await DatabaseKasir.setPajak(pajak);
                       Get.snackbar(
@@ -76,6 +76,7 @@ class _PajakState extends State<Pajak> {
                         snackPosition: SnackPosition.TOP,
                         backgroundColor: Colors.white,
                         colorText: Colors.black,
+                        icon: Icon(Icons.check_circle, color: Colors.green),
                       );
                       _loadPajak();
                     },
