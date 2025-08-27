@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/homepage/homepage.dart';
+import 'package:food_app/transaksi/transaksi.dart';
 import 'package:get/get.dart';
 
 class SuksesBayar extends StatelessWidget {
@@ -34,7 +35,7 @@ class SuksesBayar extends StatelessWidget {
                 bgColors: Colors.deepPurple,
                 label: "Kirim Nota",
                 onTap: () => Get.offAll(
-                  (),
+                  () => Transaksi(),
                   transition: Transition.native,
                   duration: Duration(milliseconds: 500),
                 ),

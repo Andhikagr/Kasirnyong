@@ -199,28 +199,31 @@ class _BayarState extends State<Bayar> {
                     });
                   },
                 ),
-                SizedBox(height: 20),
-                InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () {
-                    _tunaiController.clear();
-                    setState(() {
-                      pilihKategori = null;
-                    });
-                  },
-                  child: Ink(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.deepPurple,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "reset",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                SizedBox(height: 15),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      _tunaiController.clear();
+                      setState(() {
+                        pilihKategori = null;
+                      });
+                    },
+                    child: Ink(
+                      height: 40,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.amber,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Reset",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
@@ -231,8 +234,8 @@ class _BayarState extends State<Bayar> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: 100,
-          padding: EdgeInsets.only(bottom: 10),
+          height: 90,
+          padding: EdgeInsets.only(bottom: 20, top: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -244,90 +247,87 @@ class _BayarState extends State<Bayar> {
               ),
             ],
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: BoxOrder(
-                    height: 60,
-                    bgColors: Colors.amber,
-                    label: "Selesai & Kirim Nota",
-                    textColors: Colors.black,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: InkWell(
-                    onTap: () async {
-                      if (widget.pesananList.isNotEmpty) {
-                        final pajakPersen = await DatabaseKasir.getPajak();
-                        if (pilihKategori == null) {
-                          if (_tunaiController.text.isEmpty) {
-                            Get.snackbar(
-                              "Ups",
-                              "Kolom tunai belum di isi",
-                              snackPosition: SnackPosition.TOP,
-                              backgroundColor: Colors.white,
-                              colorText: Colors.black,
-                              icon: Icon(Icons.warning, color: Colors.orange),
-                            );
-                            return;
-                          }
-                          Get.snackbar(
-                            "Ups",
-                            "Pilih metode pembayaran dulu",
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Colors.white,
-                            colorText: Colors.black,
-                            icon: Icon(Icons.warning, color: Colors.orange),
-                          );
-                          return;
-                        }
-                        await DatabaseKasir.simpanOrder(
-                          widget.pesananList,
-                          pajakPersen.toDouble(),
-                          pilihKategori!,
-                        );
-
-                        _tunaiController.clear();
-
-                        setState(() {
-                          pilihKategori = null;
-                        });
-                        widget.pesananList.clear();
-                        widget.totalBayar.value = "0";
-
-                        //
-                        updateTransaksi();
-                        Get.to(
-                          () => SuksesBayar(),
-                          transition: Transition.native,
-                          duration: Duration(milliseconds: 300),
-                        );
-                      } else {
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Material(
+              borderRadius: BorderRadius.circular(10),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () async {
+                  if (widget.pesananList.isNotEmpty) {
+                    final pajakPersen = await DatabaseKasir.getPajak();
+                    if (pilihKategori == null) {
+                      if (_tunaiController.text.isEmpty) {
                         Get.snackbar(
-                          "Gagal",
-                          "Tidak ada pesanan untuk disimpan",
+                          "Ups",
+                          "Kolom tunai belum di isi",
                           snackPosition: SnackPosition.TOP,
                           backgroundColor: Colors.white,
                           colorText: Colors.black,
-                          icon: Icon(Icons.dangerous, color: Colors.red),
+                          icon: Icon(Icons.warning, color: Colors.orange),
                         );
+                        return;
                       }
-                    },
-                    child: BoxOrder(
-                      height: 60,
-                      bgColors: Colors.deepPurple,
-                      label: "Selesai",
-                      textColors: Colors.white,
+                      Get.snackbar(
+                        "Ups",
+                        "Pilih metode pembayaran dulu",
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black,
+                        icon: Icon(Icons.warning, color: Colors.orange),
+                      );
+                      return;
+                    }
+                    await DatabaseKasir.simpanOrder(
+                      widget.pesananList,
+                      pajakPersen.toDouble(),
+                      pilihKategori!,
+                    );
+
+                    _tunaiController.clear();
+
+                    setState(() {
+                      pilihKategori = null;
+                    });
+                    widget.pesananList.clear();
+                    widget.totalBayar.value = "0";
+
+                    //
+                    updateTransaksi();
+                    Get.to(
+                      () => SuksesBayar(),
+                      transition: Transition.native,
+                      duration: Duration(milliseconds: 300),
+                    );
+                  } else {
+                    Get.snackbar(
+                      "Gagal",
+                      "Tidak ada pesanan untuk disimpan",
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.white,
+                      colorText: Colors.black,
+                      icon: Icon(Icons.dangerous, color: Colors.red),
+                    );
+                  }
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.deepPurple,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Selesai",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

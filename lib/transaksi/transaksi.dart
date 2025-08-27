@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
+import 'package:food_app/homepage/homepage.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/transaksi/detail_transaksi.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
@@ -14,8 +15,17 @@ class Transaksi extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () => Get.to(
+            () => Homepage(),
+            transition: Transition.native,
+            duration: Duration(milliseconds: 500),
+          ),
+          icon: Icon(Icons.arrow_back),
+        ),
         title: Text("Riwayat Transaksi"),
         centerTitle: true,
       ),
