@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
+import 'package:food_app/homepage/widget/update_transaksi.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/order/order.dart';
-import 'package:food_app/widget/animation_addchart.dart';
-import 'package:food_app/widget/drawer_list.dart';
+import 'package:food_app/homepage/widget/animation_addchart.dart';
+import 'package:food_app/homepage/widget/drawer_list.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,7 +41,6 @@ class _HomepageState extends State<Homepage> {
 
   RxInt totalItem = 0.obs;
   RxDouble totalBayar = 0.0.obs;
-
   //untuk mndapatkan posisi dan ukuran widget
   GlobalKey bayarKey = GlobalKey();
 
@@ -66,6 +66,12 @@ class _HomepageState extends State<Homepage> {
   RxList<Map<String, dynamic>> pesananList = <Map<String, dynamic>>[].obs;
 
   @override
+  void initState() {
+    super.initState();
+    updateTransaksi();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -80,12 +86,14 @@ class _HomepageState extends State<Homepage> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20),
-            child: Text(
-              "Transaksi hari ini :",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.black,
+            child: Obx(
+              () => Text(
+                "Transaksi hari ini : ${totalOrderHari.value}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),

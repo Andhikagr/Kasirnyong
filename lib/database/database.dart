@@ -100,7 +100,7 @@ class DatabaseKasir {
   ) async {
     final db = await getDB();
     await db.execute(
-      "INSERT OR REPLACE INTO IDENTITAS(rowid, nama, alamat, noTelp) VALUES (1, ?, ?, ?)",
+      "INSERT OR REPLACE INTO IDENTITAS(rowid, nama, alamat, no_telp) VALUES (1, ?, ?, ?)",
       [nama, alamat, noTelp],
     );
   }

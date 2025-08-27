@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
+import 'package:food_app/homepage/widget/update_transaksi.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/menu/produk/widget/textform_produk.dart';
 import 'package:food_app/order/sukses_bayar.dart';
@@ -292,11 +293,15 @@ class _BayarState extends State<Bayar> {
                         );
 
                         _tunaiController.clear();
+
                         setState(() {
                           pilihKategori = null;
                         });
                         widget.pesananList.clear();
                         widget.totalBayar.value = "0";
+
+                        //
+                        updateTransaksi();
                         Get.to(
                           () => SuksesBayar(),
                           transition: Transition.native,

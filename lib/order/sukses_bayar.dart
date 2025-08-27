@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/homepage.dart';
+import 'package:food_app/homepage/homepage.dart';
 import 'package:get/get.dart';
 
 class SuksesBayar extends StatelessWidget {

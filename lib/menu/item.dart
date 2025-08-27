@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/menu/kategori/kategori.dart';
 import 'package:food_app/menu/produk/produk.dart';
-import 'package:food_app/widget/box_item.dart';
+import 'package:food_app/homepage/widget/box_item.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
