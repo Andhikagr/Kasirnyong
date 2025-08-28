@@ -78,6 +78,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   label: "Nama Produk",
                   controller: namaController,
                   readOnly: false,
+                  textsize: 12,
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -95,7 +96,7 @@ class _TambahProdukState extends State<TambahProduk> {
                     ),
                     hint: const Text(
                       "Pilih Kategori",
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 12),
                     ),
                     items: kategoriAdd.kategoriList
                         .map(
@@ -103,7 +104,7 @@ class _TambahProdukState extends State<TambahProduk> {
                             value: e["nama"],
                             child: Text(
                               e["nama"],
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 12),
                             ),
                           ),
                         )
@@ -121,6 +122,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   controller: hargaDasarController,
                   isCurrency: true,
                   readOnly: false,
+                  textsize: 12,
                 ),
                 SizedBox(height: 20),
                 TextformProduk(
@@ -128,6 +130,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   controller: hargaJualController,
                   isCurrency: true,
                   readOnly: false,
+                  textsize: 12,
                 ),
                 SizedBox(height: 15),
                 Row(
@@ -137,6 +140,7 @@ class _TambahProdukState extends State<TambahProduk> {
                         label: "Stok (opsional)",
                         controller: stokController,
                         readOnly: false,
+                        textsize: 12,
                       ),
                     ),
                     SizedBox(width: 10),
@@ -146,6 +150,7 @@ class _TambahProdukState extends State<TambahProduk> {
                         controller: diskonController,
                         isDiskon: true,
                         readOnly: false,
+                        textsize: 12,
                       ),
                     ),
                   ],
@@ -156,6 +161,7 @@ class _TambahProdukState extends State<TambahProduk> {
                   controller: hargaDiskonController,
                   isCurrency: true,
                   readOnly: true,
+                  textsize: 12,
                 ),
 
                 SizedBox(height: 10),
@@ -174,7 +180,10 @@ class _TambahProdukState extends State<TambahProduk> {
                       pilihKategoriNama = null;
                     });
                   },
-                  child: Text("Clear"),
+                  child: Text(
+                    "Clear",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 SizedBox(height: 5),
                 Text(

@@ -57,18 +57,21 @@ class _NamaState extends State<Nama> {
                 label: "Nama Toko / Usaha",
                 controller: _namaController,
                 readOnly: false,
+                textsize: 12,
               ),
               SizedBox(height: 20),
               TextformProduk(
                 label: "Nomor Telp.",
                 controller: _noTelpController,
                 readOnly: false,
+                textsize: 12,
               ),
               SizedBox(height: 20),
               TextformProduk(
                 label: "Alamat",
                 controller: _alamatController,
                 readOnly: false,
+                textsize: 12,
               ),
               SizedBox(height: 20),
               Align(

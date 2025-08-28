@@ -88,7 +88,7 @@ class _ButtonProdukState extends State<ButtonProduk> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(widget.icons, color: Colors.white),
+              Icon(widget.icons, color: Colors.white, size: 22),
               SizedBox(width: 10),
               Text(
                 widget.label,
