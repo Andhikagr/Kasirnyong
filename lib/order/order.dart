@@ -58,7 +58,7 @@ class _OrderState extends State<Order> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
@@ -252,7 +252,6 @@ class _OrderState extends State<Order> {
           boxShadow: [
             BoxShadow(
               color: Colors.grey.shade200,
-              spreadRadius: 1,
               blurRadius: 1,
               offset: Offset(0, -2),
             ),

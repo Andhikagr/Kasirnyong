@@ -1,89 +1,160 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/homepage/homepage.dart';
 import 'package:food_app/menu/produk/widget/format_rupiah.dart';
 import 'package:food_app/transaksi/detail_transaksi.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:get/get.dart';
 
-class Transaksi extends StatelessWidget {
-  const Transaksi({super.key});
+class Transaksi extends StatefulWidget {
+  final List<Map<String, dynamic>> listOrders;
+  const Transaksi({super.key, required this.listOrders});
+
+  @override
+  State<Transaksi> createState() => _TransaksiState();
+}
+
+class _TransaksiState extends State<Transaksi> {
+  late List<Map<String, dynamic>> allOrders;
+  late List<Map<String, dynamic>> listOrders;
+  int page = 0;
+  final int limit = 7;
+
+  @override
+  void initState() {
+    super.initState();
+    allOrders = widget.listOrders;
+    _loadPage();
+  }
+
+  void _loadPage() {
+    final start = page * limit;
+    final end = start + limit;
+    setState(() {
+      listOrders = allOrders.sublist(
+        start,
+        end > allOrders.length ? allOrders.length : end,
+      );
+    });
+  }
+
+  void previousPage() {
+    if (page > 0) {
+      page--;
+      _loadPage();
+    }
+  }
+
+  void nextPage() {
+    if ((page + 1) * limit < allOrders.length) {
+      page++;
+      _loadPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () => Get.to(
-            () => Homepage(),
-            transition: Transition.native,
-            duration: Duration(milliseconds: 500),
-          ),
-          icon: Icon(Icons.arrow_back),
-        ),
         title: Text("Riwayat Transaksi"),
         centerTitle: true,
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: DatabaseKasir.getOrders(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("Belum ada transaksi"));
-          }
-          final orders = snapshot.data!;
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Container(
-                  height: 80,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.deepPurple.shade200,
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
 
-                  child: ListTile(
-                    onTap: () => Get.to(
-                      () => DetailTransaksi(order: order),
-                      transition: Transition.rightToLeft,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                    leading: Image.asset("assets/inv.png", width: 40),
-                    title: Text(
-                      "Order #${order["id"]} - total: ${(order["total_order"] as num).toRupiah()}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      FormatWaktu.tanggal(order["tanggal"]),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: listOrders.isEmpty
+                ? Center(child: Text("Belum ada transaksi"))
+                : ListView.builder(
+                    itemCount: listOrders.length,
+                    itemBuilder: (context, index) {
+                      final order = listOrders[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        child: Container(
+                          height: 80,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.shade200,
+                                blurRadius: 5,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+
+                          child: ListTile(
+                            onTap: () => Get.to(
+                              () => DetailTransaksi(order: order),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 300),
+                            ),
+                            leading: Image.asset("assets/inv.png", width: 40),
+                            title: Text(
+                              "Order #${order["id"]} - total: ${(order["total_order"] as num).toRupiah()}",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              FormatWaktu.tanggal(order["tanggal"]),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-              );
-            },
-          );
-        },
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(bottom: 20, top: 5),
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 1,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: page > 0 ? previousPage : null,
+              child: Text(
+                "<",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+            ),
+            SizedBox(width: 30),
+            Text("${page + 1}", style: TextStyle(fontSize: 18)),
+            SizedBox(width: 30),
+            ElevatedButton(
+              onPressed: (page + 1) * limit < allOrders.length
+                  ? nextPage
+                  : null,
+              child: Text(
+                ">",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

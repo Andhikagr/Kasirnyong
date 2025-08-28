@@ -38,6 +38,7 @@ class _PajakState extends State<Pajak> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(

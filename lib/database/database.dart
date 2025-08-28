@@ -292,6 +292,8 @@ class DatabaseKasir {
   //get order
   static Future<List<Map<String, dynamic>>> getOrders() async {
     final db = await getDB();
+
+    //limit -> jumlah data ditampilkan per page
     final orders = await db.query("ORDER_HEADER", orderBy: "id DESC");
     List<Map<String, dynamic>> result = [];
 

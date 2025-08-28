@@ -52,7 +52,7 @@ class _BayarState extends State<Bayar> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.deepPurple,
@@ -241,7 +241,7 @@ class _BayarState extends State<Bayar> {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade200,
-                spreadRadius: 1,
+
                 blurRadius: 1,
                 offset: Offset(0, -2),
               ),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:food_app/menu/backup.dart';
 import 'package:food_app/menu/item.dart';
-import 'package:food_app/menu/laporan.dart';
+import 'package:food_app/laporan.dart';
 import 'package:food_app/menu/print.dart';
 import 'package:food_app/nama.dart';
-import 'package:food_app/transaksi/transaksi.dart';
+import 'package:food_app/transaksi/lapor_transaksi.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,7 +23,7 @@ class MenuDrawer extends StatelessWidget {
       {
         "label": "Transaksi",
         "icon": Icons.swap_horiz,
-        "page": () => Transaksi(),
+        "page": () => LaporTransaksi(),
       },
       {"label": "Produk", "icon": Icons.inventory, "page": () => Item()},
       {"label": "Print", "icon": Icons.print, "page": () => Print()},
