@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_app/menu/produk/widget/format_persen.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_persen.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 
 class TextformProduk extends StatelessWidget {
   final String label;
@@ -10,6 +10,7 @@ class TextformProduk extends StatelessWidget {
   final bool isDiskon;
   final bool readOnly;
   final String? suffixText;
+  final double? textsize;
 
   const TextformProduk({
     super.key,
@@ -19,6 +20,7 @@ class TextformProduk extends StatelessWidget {
     this.isDiskon = false,
     this.readOnly = true,
     this.suffixText,
+    this.textsize,
   });
 
   @override
@@ -36,15 +38,12 @@ class TextformProduk extends StatelessWidget {
         ],
         controller: controller,
         enableSuggestions: false,
-        style: TextStyle(
-          decoration: TextDecoration.none,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(decoration: TextDecoration.none, fontSize: textsize),
         decoration: InputDecoration(
           suffixText: suffixText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: label,
-          labelStyle: TextStyle(fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.grey.shade500),

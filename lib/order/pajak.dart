@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
-import 'package:food_app/menu/produk/widget/textform_produk.dart';
+import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:food_app/order/widget/format_pajak.dart';
 import 'package:get/get.dart';
 
@@ -47,7 +47,8 @@ class _PajakState extends State<Pajak> {
           ),
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
-          title: Text("Pajak"),
+          title: Text("Pajak", style: TextStyle(fontSize: 18)),
+          centerTitle: true,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -86,12 +87,13 @@ class _PajakState extends State<Pajak> {
                       width: 100,
                       decoration: BoxDecoration(
                         color: Colors.deepPurple,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
                         child: Text(
                           "Simpan",
                           style: TextStyle(
+                            fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

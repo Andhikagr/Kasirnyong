@@ -36,7 +36,10 @@ class BoxItem extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),

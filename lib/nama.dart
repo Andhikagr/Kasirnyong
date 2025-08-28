@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
-import 'package:food_app/menu/produk/widget/textform_produk.dart';
+import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:get/get.dart';
 
 class Nama extends StatefulWidget {
@@ -45,7 +45,7 @@ class _NamaState extends State<Nama> {
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
-          title: Text("Identitas"),
+          title: Text("Identitas", style: TextStyle(fontSize: 18)),
           centerTitle: true,
         ),
         body: Padding(
@@ -108,16 +108,17 @@ class _NamaState extends State<Nama> {
                     }
                   },
                   child: Ink(
-                    height: 50,
-                    width: 150,
+                    height: 40,
+                    width: 100,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                       color: Colors.deepPurple,
                     ),
                     child: Center(
                       child: Text(
                         "Simpan",
                         style: TextStyle(
+                          fontSize: 12,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -128,59 +129,85 @@ class _NamaState extends State<Nama> {
               ),
 
               SizedBox(height: 20),
-              Container(
-                height: 130,
-                width: double.infinity,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.deepPurple,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.deepPurple.shade200,
-                      blurRadius: 5,
-                      spreadRadius: 1,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    height: 40,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.deepPurple.shade200,
+                          blurRadius: 1,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Obx(
-                        () => Text(
+                    child: Obx(
+                      () => Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
                           identitas["nama"] ?? "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Obx(
-                        () => Text(
-                          identitas["no_telp"] ?? "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Obx(
-                        () => Text(
-                          identitas["alamat"] ?? "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    height: 40,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.deepPurple.shade200,
+                          blurRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Obx(
+                      () => Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          identitas["no_telp"] ?? "",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    height: 75,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.deepPurple.shade200,
+                          blurRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Obx(
+                      () => Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          identitas["alamat"] ?? "",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/controller/kategori_control.dart';
 import 'package:food_app/controller/produk_control.dart';
 import 'package:food_app/homepage/widget/update_transaksi.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:food_app/order/order.dart';
 import 'package:food_app/homepage/widget/animation_addchart.dart';
 import 'package:food_app/homepage/widget/drawer_list.dart';
@@ -88,12 +88,8 @@ class _HomepageState extends State<Homepage> {
             padding: EdgeInsets.only(right: 20),
             child: Obx(
               () => Text(
-                "Transaksi hari ini : ${totalOrderHari.value}",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
+                "Transaksi hari ini : ${totalOrderHari.value} item",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ),
           ),
@@ -127,7 +123,7 @@ class _HomepageState extends State<Homepage> {
                           "Bayar",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -160,9 +156,20 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              SizedBox(
+              SizedBox(height: 5),
+              Container(
+                padding: EdgeInsets.only(bottom: 5),
                 height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade200,
+                      blurRadius: 1,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Obx(
                   () => ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -183,7 +190,7 @@ class _HomepageState extends State<Homepage> {
                               },
                               child: Container(
                                 margin: EdgeInsets.all(5),
-                                height: 60,
+                                height: 40,
                                 width: 120,
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
@@ -202,6 +209,7 @@ class _HomepageState extends State<Homepage> {
                                   child: Text(
                                     menuItem,
                                     style: TextStyle(
+                                      fontSize: 12,
                                       color: isSelected
                                           ? Colors.white
                                           : Colors.deepPurple,
@@ -218,7 +226,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
@@ -231,19 +239,19 @@ class _HomepageState extends State<Homepage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.grey.shade600,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                       );
                     }
                     return GridView.builder(
-                      padding: EdgeInsets.only(bottom: 15),
+                      padding: EdgeInsets.only(top: 10, bottom: 15),
                       itemCount: items.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 15,
-                        childAspectRatio: 0.85,
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 0.92,
                       ),
                       itemBuilder: (context, index) {
                         final produkView = items[index];
@@ -309,6 +317,7 @@ class _HomepageState extends State<Homepage> {
                             );
                           },
                           child: Container(
+                            margin: EdgeInsets.all(5),
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -316,16 +325,15 @@ class _HomepageState extends State<Homepage> {
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.deepPurple.shade200,
-                                  blurRadius: 5,
-                                  spreadRadius: 1,
+                                  blurRadius: 2,
                                 ),
                               ],
                             ),
                             child: Column(
                               children: [
                                 SizedBox(
-                                  width: 150,
-                                  height: 120,
+                                  width: 125,
+                                  height: 90,
                                   key: productKey,
                                   child: produkView["gambar"] != null
                                       ? Image.file(
@@ -344,12 +352,9 @@ class _HomepageState extends State<Homepage> {
                                     alignment: Alignment.bottomLeft,
                                     child: Text(
                                       produkView["nama"] ?? "",
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
+                                      style: TextStyle(fontSize: 12),
                                     ),
                                   ),
                                 ),
@@ -361,6 +366,7 @@ class _HomepageState extends State<Homepage> {
                                         child: Text(
                                           hargaJual.toRupiah(),
                                           style: TextStyle(
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             decoration:
                                                 TextDecoration.lineThrough,
@@ -374,6 +380,7 @@ class _HomepageState extends State<Homepage> {
                                         Text(
                                           hargaAkhir.toRupiah(),
                                           style: TextStyle(
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             color: diskon > 0
                                                 ? Colors.red
@@ -382,8 +389,9 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         diskon != 0
                                             ? Text(
-                                                "${produkView["diskon"]!.toInt()}% Off",
+                                                "-${produkView["diskon"]!.toInt()}%",
                                                 style: TextStyle(
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.red,
                                                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/homepage/homepage.dart';
-import 'package:food_app/transaksi/transaksi.dart';
+import 'package:food_app/transaksi/riwayat_transaksi.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +45,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: Text("Transaksi"),
+        title: Text("Transaksi", style: TextStyle(fontSize: 18)),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -64,8 +64,8 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
             ? Center(child: Text("Belum ada transaksi"))
             : GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 5,
                   crossAxisCount: 3,
                   childAspectRatio: 0.9,
                 ),
@@ -92,7 +92,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                       }).toList();
 
                       Get.to(
-                        () => Transaksi(listOrders: selectTanggal),
+                        () => RiwayatTransaksi(listOrders: selectTanggal),
                         transition: Transition.rightToLeft,
                         duration: Duration(milliseconds: 300),
                       );
@@ -107,7 +107,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(12),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

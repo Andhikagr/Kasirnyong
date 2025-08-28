@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
-import 'package:food_app/order/widget/box_order.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:food_app/order/widget/format_pajak.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:food_app/transaksi/widget/info.dart';
+import 'package:food_app/transaksi/widget/share_pdf.dart';
 
 class DetailTransaksi extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -20,7 +20,7 @@ class DetailTransaksi extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: Text("Riwayat Transaksi"),
+        title: Text("Detail Transaksi", style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
       body: Padding(
@@ -102,16 +102,16 @@ class DetailTransaksi extends StatelessWidget {
                         item["produk_nama"],
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                       subtitle: Text(
-                        "${(item["jumlah"] ?? 0).toString()}x ${(item["harga_jual"] as num).toRupiah()}"
-                        "${(item["diskon"] != null && (item["diskon"] as num) > 0 ? " - ${(item["diskon"] as num).toInt()}%" : "")}",
+                        "${(item["jumlah"] ?? 0).toString()} item x ${(item["harga_jual"] as num).toRupiah()}"
+                        "${(item["diskon"] != null && (item["diskon"] as num) > 0 ? " (-${(item["diskon"] as num).toInt()}%)" : "")}",
                         style: TextStyle(
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: Colors.grey.shade700,
+                          color: Colors.grey.shade600,
                         ),
                       ),
                       trailing: Text(
@@ -119,7 +119,7 @@ class DetailTransaksi extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ),
@@ -131,8 +131,8 @@ class DetailTransaksi extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 100,
-        padding: EdgeInsets.only(bottom: 10),
+        height: 90,
+        padding: EdgeInsets.only(bottom: 25, left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -144,21 +144,30 @@ class DetailTransaksi extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: BoxOrder(
-                  height: 60,
-                  bgColors: Colors.deepPurple,
-                  label: "Kirim Invoice",
-                  textColors: Colors.white,
-                  textSize: 18,
+        child: Material(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () async {
+              await shareInvoice(order);
+            },
+            child: Ink(
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  "Kirim Invoice",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

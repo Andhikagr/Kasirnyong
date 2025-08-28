@@ -16,11 +16,8 @@ class SuksesBayar extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/sukses.png", fit: BoxFit.contain, width: 150),
-              Text(
-                "Pembayaran Berhasil",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
+              Image.asset("assets/sukses.png", fit: BoxFit.contain, width: 125),
+              Text("Pembayaran Berhasil", style: TextStyle(fontSize: 16)),
             ],
           ),
         ),
@@ -92,18 +89,14 @@ class BoxSukses extends StatelessWidget {
             color: bgColors,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              BoxShadow(
-                color: Colors.deepPurple.shade200,
-                blurRadius: 5,
-                spreadRadius: 1,
-              ),
+              BoxShadow(color: Colors.deepPurple.shade200, blurRadius: 3),
             ],
           ),
           child: Center(
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 14,
                 color: textColors,
                 fontWeight: FontWeight.bold,
               ),

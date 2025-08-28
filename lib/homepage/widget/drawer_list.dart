@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:food_app/menu/backup.dart';
-import 'package:food_app/menu/item.dart';
+import 'package:food_app/manaj_produk/backup.dart';
+import 'package:food_app/manaj_produk/produk/manaj_produk.dart';
 import 'package:food_app/laporan.dart';
-import 'package:food_app/menu/print.dart';
+import 'package:food_app/manaj_produk/print.dart';
 import 'package:food_app/nama.dart';
 import 'package:food_app/transaksi/lapor_transaksi.dart';
 import 'package:get/route_manager.dart';
@@ -16,7 +16,7 @@ class MenuDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> drawerMenu = [
       {
-        "label": "Nama",
+        "label": "Nama Toko",
         "icon": Icons.storefront_outlined,
         "page": () => Nama(),
       },
@@ -25,9 +25,17 @@ class MenuDrawer extends StatelessWidget {
         "icon": Icons.swap_horiz,
         "page": () => LaporTransaksi(),
       },
-      {"label": "Produk", "icon": Icons.inventory, "page": () => Item()},
+      {
+        "label": "Manajemen Produk",
+        "icon": Icons.inventory,
+        "page": () => Item(),
+      },
       {"label": "Print", "icon": Icons.print, "page": () => Print()},
-      {"label": "Laporan", "icon": Icons.bar_chart, "page": () => Laporan()},
+      {
+        "label": "Laporan Penjualan",
+        "icon": Icons.bar_chart,
+        "page": () => Laporan(),
+      },
       {
         "label": "Backup Database",
         "icon": Icons.backup,
@@ -40,7 +48,7 @@ class MenuDrawer extends StatelessWidget {
       precacheImage(AssetImage('assets/list.png'), context);
     });
     return Drawer(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: Colors.white,
       child: ListView(
         children: [
           Padding(
@@ -49,7 +57,7 @@ class MenuDrawer extends StatelessWidget {
               "Kasirnyong",
               style: GoogleFonts.lobster(
                 fontSize: 28,
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -63,11 +71,7 @@ class MenuDrawer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 3,
-                    spreadRadius: 1,
-                  ),
+                  BoxShadow(color: Colors.deepPurple.shade200, blurRadius: 2),
                 ],
               ),
 
@@ -76,8 +80,9 @@ class MenuDrawer extends StatelessWidget {
                 title: Text(
                   "${dataDrawer["label"]}",
                   style: TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
+                    color: Colors.black,
                   ),
                 ),
                 onTap: () {

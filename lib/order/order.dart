@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:food_app/order/bayar.dart';
 import 'package:food_app/order/pajak.dart';
 import 'package:get/get.dart';
@@ -67,7 +67,7 @@ class _OrderState extends State<Order> {
           onPressed: () => Get.back(),
           icon: Icon(Icons.arrow_back),
         ),
-        title: Text("Detail Pesanan"),
+        title: Text("Detail Pesanan", style: TextStyle(fontSize: 18)),
         actions: [
           Row(
             children: [
@@ -93,7 +93,7 @@ class _OrderState extends State<Order> {
                         title: Text(
                           "Apakah kamu yakin?",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -105,14 +105,22 @@ class _OrderState extends State<Order> {
                             },
                             child: Text(
                               "Ya",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           TextButton(
                             onPressed: () => Get.back(),
                             child: Text(
                               "Batal",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -163,12 +171,12 @@ class _OrderState extends State<Order> {
                         children: [
                           Text(
                             data["nama"],
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.grey.shade800,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                           Row(
@@ -320,7 +328,8 @@ class _OrderState extends State<Order> {
                         "Pesanan masih kosong",
                         snackPosition: SnackPosition.TOP,
                         backgroundColor: Colors.white,
-                        colorText: Colors.black,
+                        icon: Icon(Icons.warning, color: Colors.amber),
+                        colorText: Colors.grey.shade800,
                       );
                       return;
                     }
@@ -345,7 +354,7 @@ class _OrderState extends State<Order> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 16,
                         ),
                       ),
                     ),

@@ -9,7 +9,7 @@ class FormatWaktu {
       }
 
       final dateTime = DateTime.parse(dateTimeString);
-      return DateFormat("dd MMMM yyyy - HH:mm:ss").format(dateTime);
+      return DateFormat("dd-MM-yyyy - HH:mm:ss").format(dateTime);
     } catch (e) {
       return dateTimeString;
     }

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:food_app/transaksi/detail_transaksi.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:get/get.dart';
 
-class Transaksi extends StatefulWidget {
+class RiwayatTransaksi extends StatefulWidget {
   final List<Map<String, dynamic>> listOrders;
-  const Transaksi({super.key, required this.listOrders});
+  const RiwayatTransaksi({super.key, required this.listOrders});
 
   @override
-  State<Transaksi> createState() => _TransaksiState();
+  State<RiwayatTransaksi> createState() => _RiwayatTransaksiState();
 }
 
-class _TransaksiState extends State<Transaksi> {
+class _RiwayatTransaksiState extends State<RiwayatTransaksi> {
   late List<Map<String, dynamic>> allOrders;
   late List<Map<String, dynamic>> listOrders;
   int page = 0;
@@ -58,7 +58,7 @@ class _TransaksiState extends State<Transaksi> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: Text("Riwayat Transaksi"),
+        title: Text("Riwayat Transaksi", style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
 
@@ -77,7 +77,7 @@ class _TransaksiState extends State<Transaksi> {
                           vertical: 10,
                         ),
                         child: Container(
-                          height: 80,
+                          height: 70,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -85,7 +85,7 @@ class _TransaksiState extends State<Transaksi> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.deepPurple.shade200,
-                                blurRadius: 5,
+                                blurRadius: 2,
                                 spreadRadius: 1,
                               ),
                             ],
@@ -97,14 +97,18 @@ class _TransaksiState extends State<Transaksi> {
                               transition: Transition.rightToLeft,
                               duration: Duration(milliseconds: 300),
                             ),
-                            leading: Image.asset("assets/inv.png", width: 40),
+                            leading: Image.asset("assets/inv.png", width: 30),
                             title: Text(
                               "Order #${order["id"]} - total: ${(order["total_order"] as num).toRupiah()}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             subtitle: Text(
                               FormatWaktu.tanggal(order["tanggal"]),
                               style: TextStyle(
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade700,
                               ),

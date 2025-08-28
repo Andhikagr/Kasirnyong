@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/homepage/widget/update_transaksi.dart';
-import 'package:food_app/menu/produk/widget/format_rupiah.dart';
-import 'package:food_app/menu/produk/widget/textform_produk.dart';
+import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:food_app/order/sukses_bayar.dart';
 import 'package:food_app/order/widget/box_order.dart';
 import 'package:get/get.dart';
@@ -61,7 +61,7 @@ class _BayarState extends State<Bayar> {
             onPressed: () => Get.back(),
             icon: Icon(Icons.arrow_back),
           ),
-          title: Text("Pembayaran"),
+          title: Text("Pembayaran", style: TextStyle(fontSize: 18)),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -72,7 +72,7 @@ class _BayarState extends State<Bayar> {
                 SizedBox(height: 20),
                 Obx(
                   () => Container(
-                    height: 150,
+                    height: 120,
                     width: double.infinity,
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class _BayarState extends State<Bayar> {
                         Text(
                           "Total Pembayaran",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Colors.grey.shade400,
                           ),
@@ -109,6 +109,7 @@ class _BayarState extends State<Bayar> {
                   controller: _tunaiController,
                   readOnly: false,
                   isCurrency: true,
+                  textsize: 16,
                 ),
                 SizedBox(height: 30),
                 Container(
@@ -121,7 +122,7 @@ class _BayarState extends State<Bayar> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.deepPurple.shade200,
-                        blurRadius: 5,
+                        blurRadius: 2,
                         spreadRadius: 1,
                       ),
                     ],
@@ -141,7 +142,7 @@ class _BayarState extends State<Bayar> {
                         () => Text(
                           kembalian.value,
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: Colors.deepPurple,
                           ),
@@ -157,8 +158,7 @@ class _BayarState extends State<Bayar> {
                     width: 180,
                     height: 40,
                     label: "Metode Pembayaran",
-                    bgColors: Colors.amber,
-                    textColors: Colors.black,
+                    bgColors: Colors.amberAccent,
                   ),
                 ),
                 SizedBox(height: 15),
@@ -179,7 +179,7 @@ class _BayarState extends State<Bayar> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
-                          Text(e),
+                          Text(e, style: TextStyle(fontSize: 12)),
                         ],
                       ),
                     );
@@ -214,8 +214,8 @@ class _BayarState extends State<Bayar> {
                       height: 40,
                       width: 100,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.amberAccent,
                       ),
                       child: Center(
                         child: Text(
@@ -235,7 +235,7 @@ class _BayarState extends State<Bayar> {
         ),
         bottomNavigationBar: Container(
           height: 90,
-          padding: EdgeInsets.only(bottom: 20, top: 10),
+          padding: EdgeInsets.only(bottom: 25, top: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -311,6 +311,7 @@ class _BayarState extends State<Bayar> {
                   }
                 },
                 child: Ink(
+                  height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.deepPurple,

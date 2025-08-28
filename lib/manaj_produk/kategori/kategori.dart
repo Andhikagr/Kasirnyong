@@ -21,7 +21,7 @@ class _KategoriState extends State<Kategori> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: Text("Kategori"),
+        title: Text("Kategori", style: TextStyle(fontSize: 18)),
         centerTitle: true,
       ),
       body: Padding(
@@ -46,11 +46,10 @@ class _KategoriState extends State<Kategori> {
                   ],
                 ),
                 child: ListTile(
-                  leading: Icon(Icons.storefront_rounded),
+                  leading: Icon(Icons.storefront_sharp),
                   title: Text(
-                    kategori['nama'], // sesuai field tabel
-
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    kategori['nama'],
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
@@ -59,10 +58,11 @@ class _KategoriState extends State<Kategori> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            icon: Icon(Icons.warning, color: Colors.red),
                             title: Text(
                               "Apakah kamu yakin?",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -74,14 +74,22 @@ class _KategoriState extends State<Kategori> {
                                 },
                                 child: Text(
                                   "Ya",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade800,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               TextButton(
                                 onPressed: () => Get.back(),
                                 child: Text(
                                   "Batal",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade800,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -105,14 +113,17 @@ class _KategoriState extends State<Kategori> {
               return AlertDialog(
                 title: Text(
                   "Tambah Kategori",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 content: TextFormField(
                   enableSuggestions: false,
                   controller: tambahKat,
                   decoration: InputDecoration(
                     hintText: "tambah",
-                    hintStyle: TextStyle(color: Colors.grey.shade500),
+                    hintStyle: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ),
                 actions: [
@@ -126,7 +137,11 @@ class _KategoriState extends State<Kategori> {
                     },
                     child: Text(
                       "Simpan",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   TextButton(
@@ -136,7 +151,11 @@ class _KategoriState extends State<Kategori> {
                     },
                     child: Text(
                       "Batal",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
