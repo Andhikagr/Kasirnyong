@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
@@ -100,7 +102,7 @@ class _LaporanState extends State<Laporan> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: Text("Laporan"),
+        title: Text("Laporan Penjualan", style: TextStyle(fontSize: 18)),
         centerTitle: true,
         actions: [
           IconButton(onPressed: _pickTanggal, icon: Icon(Icons.calendar_month)),
@@ -134,17 +136,17 @@ class _LaporanState extends State<Laporan> {
                       totalPenjualan.toRupiah(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 36,
+                        fontSize: 32,
                       ),
                     ),
                     Text(
                       tanggalLaporan != null
-                          ? "Total Penjualan ${DateFormat("dd MMM yyyy").format(tanggalLaporan!)}"
+                          ? "Total Penjualan ${DateFormat("dd-MM-yyyy").format(tanggalLaporan!)}"
                           : "Silahkan pilih tanggal",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.grey.shade600,
-                        fontSize: 16,
+                        fontSize: 12,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -164,7 +166,7 @@ class _LaporanState extends State<Laporan> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -199,14 +201,17 @@ class _LaporanState extends State<Laporan> {
                         "Produk terlaris hari ini",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 14,
                         ),
                       ),
                     ),
                     Divider(),
                     if (produkTerlaris != null) ...[
                       produkTerlaris!["gambar"] != null
-                          ? Image.asset(produkTerlaris!["gambar"], width: 150)
+                          ? Image.file(
+                              File(produkTerlaris!["gambar"]),
+                              width: 150,
+                            )
                           : Icon(Icons.image_not_supported),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,19 +224,19 @@ class _LaporanState extends State<Laporan> {
                                 produkTerlaris!["nama"],
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                 ),
                               ),
                               Text(
                                 "Terjual : ${produkTerlaris!["jumlah"]} item",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
                           ),
-                          Image.asset("assets/best.png", width: 50),
+                          Image.asset("assets/best.png", width: 80),
                         ],
                       ),
                     ],
