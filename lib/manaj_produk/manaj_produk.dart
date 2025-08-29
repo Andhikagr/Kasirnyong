@@ -5,8 +5,23 @@ import 'package:food_app/homepage/widget/box_item.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class Item extends StatelessWidget {
+class Item extends StatefulWidget {
   const Item({super.key});
+
+  @override
+  State<Item> createState() => _ItemState();
+}
+
+class _ItemState extends State<Item> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(const AssetImage('assets/brand.png'), context);
+      precacheImage(const AssetImage('assets/list.png'), context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

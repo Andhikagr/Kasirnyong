@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/backup.dart';
-import 'package:food_app/manaj_produk/produk/manaj_produk.dart';
+import 'package:food_app/manaj_produk/manaj_produk.dart';
 import 'package:food_app/laporan.dart';
 import 'package:food_app/print.dart';
 import 'package:food_app/nama.dart';
@@ -35,11 +35,7 @@ class MenuDrawer extends StatelessWidget {
         "icon": Icons.bar_chart,
         "page": () => Laporan(),
       },
-      {
-        "label": "Backup Database",
-        "icon": Icons.backup,
-        "page": () => Backup(),
-      },
+      {"label": "Backup Data", "icon": Icons.backup, "page": () => Backup()},
     ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

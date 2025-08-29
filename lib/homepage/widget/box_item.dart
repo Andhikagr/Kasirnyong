@@ -28,7 +28,10 @@ class BoxItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade300, width: 2),
+                    border: Border.all(
+                      color: Colors.deepPurple.shade100,
+                      width: 1.5,
+                    ),
                   ),
                   padding: EdgeInsets.all(10),
                   child: Image.asset(images, fit: BoxFit.contain, width: 60),

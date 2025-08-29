@@ -78,6 +78,10 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
   void initState() {
     super.initState();
     loadTanggal();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(const AssetImage('assets/calender.png'), context);
+    });
   }
 
   @override
@@ -106,7 +110,6 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.white,
-
                     title: Text(
                       "Pilih tanggal",
                       style: TextStyle(
@@ -131,7 +134,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            "*Menghapus riwayat transaksi akan menghilangkan semua data riwayat transaksi secara permanen. Pastikan data sudah dibackup.",
+                            "PERINGATAN* Menghapus riwayat transaksi akan menghilangkan semua data secara permanen. Pastikan data sudah dibackup atau di eksport ke dalam file CSV.",
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               fontSize: 11,
@@ -175,7 +178,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                 },
               );
             },
-            icon: Icon(Icons.bookmark_remove_sharp),
+            icon: Icon(Icons.manage_history_sharp),
             tooltip: "Hapus transaksi",
           ),
         ],
@@ -197,6 +200,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                 itemBuilder: (context, index) {
                   final showTanggal = tanggal[index];
                   return InkWell(
+                    borderRadius: BorderRadius.circular(10),
                     onTap: () async {
                       // ambil transaksi hanya untuk tanggal ini
                       final allOrders = await DatabaseKasir.getOrders();
@@ -223,11 +227,13 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                     },
                     child: Ink(
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey.shade600,
-                          width: 2,
-                        ),
-                        color: Colors.deepPurple,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.deepPurple.shade200,
+                            blurRadius: 2,
+                          ),
+                        ],
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -235,12 +241,12 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('assets/calendar.png', width: 55),
+                            Image.asset('assets/calender.png', width: 55),
                             SizedBox(height: 15),
                             Container(
                               padding: EdgeInsets.all(3),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.deepPurple,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -249,7 +255,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
-                                    color: Colors.deepPurple,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
