@@ -319,4 +319,38 @@ class DatabaseKasir {
     }
     return result;
   }
+
+  //delete
+  static Future<void> deleteOrderHistory(
+    DateTime tanggalAwal,
+    DateTime tanggalAkhir,
+  ) async {
+    final db = await getDB();
+
+    String start = tanggalAwal.toIso8601String().substring(0, 10);
+    String end = tanggalAkhir
+        .add(Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);
+
+    final orders = await db.rawQuery(
+      "SELECT id, tanggal FROM ORDER_HEADER WHERE tanggal >= ? AND tanggal < ?",
+      [start, end],
+    );
+
+    //hapus order detail
+    for (var orderDel in orders) {
+      await db.delete(
+        "ORDER_DETAIL",
+        where: "order_id = ?",
+        whereArgs: [orderDel["id"]],
+      );
+    }
+    //hapus order
+    await db.delete(
+      "ORDER_HEADER",
+      where: "tanggal >= ? AND tanggal < ?",
+      whereArgs: [start, end],
+    );
+  }
 }

@@ -60,7 +60,7 @@ class _TambahProdukState extends State<TambahProduk> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,

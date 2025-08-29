@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/database/database.dart';
 import 'package:food_app/homepage/homepage.dart';
+import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:food_app/transaksi/riwayat_transaksi.dart';
+import 'package:food_app/transaksi/widget/format_csv.dart';
 import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,11 @@ class LaporTransaksi extends StatefulWidget {
 class _LaporTransaksiState extends State<LaporTransaksi> {
   List<String> tanggal = [];
   bool isLoading = false;
+  DateTime? _tanggalAwal;
+  DateTime? _tanggalAkhir;
+
+  final TextEditingController _tanggalAwalController = TextEditingController();
+  final TextEditingController _tanggalAkhirController = TextEditingController();
 
   Future<void> loadTanggal() async {
     setState(() => isLoading = true);
@@ -32,6 +39,41 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
     });
   }
 
+  //pilih tanggal
+  Future<void> _pickTanggalAwal() async {
+    final pickAwal = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2525),
+    );
+
+    if (pickAwal != null) {
+      setState(() {
+        _tanggalAwal = pickAwal;
+        _tanggalAwalController.text =
+            "${pickAwal.day}-${pickAwal.month}-${pickAwal.year}";
+      });
+    }
+  }
+
+  Future<void> _pickTanggalAkhir() async {
+    final pickAkhir = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2525),
+    );
+
+    if (pickAkhir != null) {
+      setState(() {
+        _tanggalAkhir = pickAkhir;
+        _tanggalAkhirController.text =
+            "${pickAkhir.day}-${pickAkhir.month}-${pickAkhir.year}";
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +83,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
@@ -55,6 +98,87 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
             duration: Duration(milliseconds: 500),
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+
+                    title: Text(
+                      "Pilih tanggal",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    content: SizedBox(
+                      height: 220,
+                      child: Column(
+                        children: [
+                          TextformProduk(
+                            label: "Tanggal Awal",
+                            controller: _tanggalAwalController,
+                            onTap: () => _pickTanggalAwal(),
+                          ),
+                          SizedBox(height: 15),
+                          TextformProduk(
+                            label: "Tanggal Akhir",
+                            controller: _tanggalAkhirController,
+                            onTap: () => _pickTanggalAkhir(),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "*Menghapus riwayat transaksi akan menghilangkan semua data riwayat transaksi secara permanen. Pastikan data sudah dibackup.",
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(),
+                        child: Text(
+                          "Batal",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await DatabaseKasir.deleteOrderHistory(
+                            _tanggalAwal!,
+                            _tanggalAkhir!,
+                          );
+                          loadTanggal();
+                          Get.back();
+                        },
+                        child: Text(
+                          "Hapus",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(Icons.bookmark_remove_sharp),
+            tooltip: "Hapus transaksi",
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -137,6 +261,11 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                   );
                 },
               ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepPurple,
+        onPressed: exportCSV,
+        child: Image.asset("assets/csve.png", width: 35),
       ),
     );
   }

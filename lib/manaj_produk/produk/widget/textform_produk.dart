@@ -11,6 +11,7 @@ class TextformProduk extends StatelessWidget {
   final bool readOnly;
   final String? suffixText;
   final double? textsize;
+  final VoidCallback? onTap;
 
   const TextformProduk({
     super.key,
@@ -21,6 +22,7 @@ class TextformProduk extends StatelessWidget {
     this.readOnly = true,
     this.suffixText,
     this.textsize,
+    this.onTap,
   });
 
   @override
@@ -28,6 +30,7 @@ class TextformProduk extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
+        onTap: onTap,
         readOnly: readOnly,
         inputFormatters: [
           if (isCurrency) ...[

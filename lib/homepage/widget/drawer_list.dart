@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:food_app/manaj_produk/backup.dart';
+import 'package:food_app/backup.dart';
 import 'package:food_app/manaj_produk/produk/manaj_produk.dart';
 import 'package:food_app/laporan.dart';
-import 'package:food_app/manaj_produk/print.dart';
+import 'package:food_app/print.dart';
 import 'package:food_app/nama.dart';
 import 'package:food_app/transaksi/lapor_transaksi.dart';
 import 'package:get/route_manager.dart';
