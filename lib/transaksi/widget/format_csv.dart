@@ -13,9 +13,9 @@ Future<void> exportCSV() async {
     [
       "ID Transaksi",
       "Tanggal",
-      "Pajak",
       "Metode Bayar",
       "Produk",
+      "Kategori",
       "Jumlah",
       "Harga Jual",
       "Diskon",
@@ -29,9 +29,9 @@ Future<void> exportCSV() async {
       csvData.add([
         orderHis['id'].toString(),
         orderHis['tanggal'],
-        orderHis['pajak_persen'].toString(),
         orderHis['metode_bayar'],
         item['produk_nama'],
+        item["kategori"].toString(),
         item['jumlah'].toString(),
         item['harga_jual'].toString(),
         (item['diskon'] ?? 0).toString(),

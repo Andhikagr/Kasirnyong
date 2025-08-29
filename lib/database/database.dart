@@ -300,7 +300,7 @@ class DatabaseKasir {
     for (var order in orders) {
       final details = await db.rawQuery(
         '''
-        SELECT d.jumlah, d.harga_jual, d.diskon, d.harga_akhir, d.total, p.nama as produk_nama, p.gambar 
+        SELECT d.jumlah, d.harga_jual, d.diskon, d.harga_akhir, d.total, p.nama as produk_nama, p.gambar, p.kategori_nama as kategori 
         FROM ORDER_DETAIL d 
         JOIN PRODUK p ON d.produk_id = p.id
         WHERE d.order_id = ?
