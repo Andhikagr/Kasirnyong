@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/backup.dart';
-import 'package:food_app/manaj_produk/manaj_produk.dart';
-import 'package:food_app/laporan.dart';
-import 'package:food_app/print.dart';
-import 'package:food_app/nama.dart';
-import 'package:food_app/transaksi/lapor_transaksi.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:googleapis/bigtableadmin/v2.dart';
+import 'package:kasirnyong/laporan.dart';
+import 'package:kasirnyong/manaj_produk/manaj_produk.dart';
+import 'package:kasirnyong/nama.dart';
+import 'package:kasirnyong/print.dart';
+import 'package:kasirnyong/transaksi/lapor_transaksi.dart';
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
@@ -27,7 +27,7 @@ class MenuDrawer extends StatelessWidget {
       {
         "label": "Manajemen Produk",
         "icon": Icons.inventory,
-        "page": () => Item(),
+        "page": () => ManajProduk(),
       },
       {"label": "Print", "icon": Icons.print, "page": () => Print()},
       {

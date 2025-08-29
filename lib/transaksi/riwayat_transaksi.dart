@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/transaksi/detail_transaksi.dart';
-import 'package:food_app/transaksi/widget/format_waktu.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/transaksi/detail_transaksi.dart';
+import 'package:kasirnyong/transaksi/widget/format_waktu.dart';
 
 class RiwayatTransaksi extends StatefulWidget {
   final List<Map<String, dynamic>> listOrders;

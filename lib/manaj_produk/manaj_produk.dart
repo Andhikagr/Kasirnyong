@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/manaj_produk/kategori/kategori.dart';
-import 'package:food_app/manaj_produk/produk/produk.dart';
-import 'package:food_app/homepage/widget/box_item.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:kasirnyong/homepage/widget/box_item.dart';
+import 'package:kasirnyong/manaj_produk/kategori/kategori.dart';
+import 'package:kasirnyong/manaj_produk/produk/produk.dart';
 
-class Item extends StatefulWidget {
-  const Item({super.key});
+class ManajProduk extends StatefulWidget {
+  const ManajProduk({super.key});
 
   @override
-  State<Item> createState() => _ItemState();
+  State<ManajProduk> createState() => _ItemState();
 }
 
-class _ItemState extends State<Item> {
+class _ItemState extends State<ManajProduk> {
   @override
   void initState() {
     super.initState();

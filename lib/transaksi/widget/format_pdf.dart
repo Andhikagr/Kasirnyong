@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/order/widget/format_pajak.dart';
-import 'package:food_app/transaksi/widget/format_waktu.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/order/widget/format_pajak.dart';
+import 'package:kasirnyong/transaksi/widget/format_waktu.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 

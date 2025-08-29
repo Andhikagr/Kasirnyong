@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
 
 class Nama extends StatefulWidget {
   const Nama({super.key});

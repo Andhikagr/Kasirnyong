@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/kategori_control.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/controller/kategori_control.dart';
 
 class Kategori extends StatefulWidget {
   const Kategori({super.key});

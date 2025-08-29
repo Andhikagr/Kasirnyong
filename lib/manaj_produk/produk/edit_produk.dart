@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/kategori_control.dart';
-import 'package:food_app/controller/produk_control.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/manaj_produk/produk/widget/button_produk.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/controller/kategori_control.dart';
+import 'package:kasirnyong/controller/produk_control.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/button_produk.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
 
 class EditProduk extends StatefulWidget {
   final int? produkId;

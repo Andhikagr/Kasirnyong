@@ -1,6 +1,6 @@
-import 'package:food_app/controller/produk_control.dart';
-import 'package:food_app/database/database.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/controller/produk_control.dart';
+import 'package:kasirnyong/database/database.dart';
 
 class KategoriControl extends GetxController {
   //// Observable list untuk menyimpan data kategori

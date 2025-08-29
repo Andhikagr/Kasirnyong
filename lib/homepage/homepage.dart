@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/kategori_control.dart';
-import 'package:food_app/controller/produk_control.dart';
-import 'package:food_app/homepage/widget/update_transaksi.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/order/order.dart';
-import 'package:food_app/homepage/widget/animation_addchart.dart';
-import 'package:food_app/homepage/widget/drawer_list.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kasirnyong/controller/kategori_control.dart';
+import 'package:kasirnyong/controller/produk_control.dart';
+import 'package:kasirnyong/homepage/widget/animation_addchart.dart';
+import 'package:kasirnyong/homepage/widget/drawer_list.dart';
+import 'package:kasirnyong/homepage/widget/update_transaksi.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/order/order.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});

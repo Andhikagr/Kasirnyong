@@ -1,5 +1,5 @@
-import 'package:food_app/database/database.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/database/database.dart';
 
 class ProdukControl extends GetxController {
   var produkList = <Map<String, dynamic>>[].obs;

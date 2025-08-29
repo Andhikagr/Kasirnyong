@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/kategori_control.dart';
-import 'package:food_app/controller/produk_control.dart';
-import 'package:food_app/splash.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kasirnyong/controller/kategori_control.dart';
+import 'package:kasirnyong/controller/produk_control.dart';
+import 'package:kasirnyong/splash.dart';
 
 void main() async {
-  Get.put(KategoriControl());
-  Get.put(ProdukControl());
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(KategoriControl(), permanent: true);
+  Get.put(ProdukControl(), permanent: true);
+  //hanya potrait saja
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(MyApp());
 }

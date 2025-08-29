@@ -1,9 +1,15 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/order/widget/format_pajak.dart';
-import 'package:food_app/transaksi/widget/format_waktu.dart';
-import 'package:food_app/transaksi/widget/info.dart';
-import 'package:food_app/transaksi/widget/share_pdf.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/instance_manager.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
+import 'package:kasirnyong/order/widget/format_pajak.dart';
+import 'package:kasirnyong/transaksi/widget/format_kirim.dart';
+import 'package:kasirnyong/transaksi/widget/format_pdf.dart';
+import 'package:kasirnyong/transaksi/widget/format_waktu.dart';
+import 'package:kasirnyong/transaksi/widget/info.dart';
 
 class DetailTransaksi extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -149,8 +155,78 @@ class DetailTransaksi extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: () async {
-              await shareInvoice(order);
+
+            // onTap: () async {
+            //   await shareInvoice(order);
+            // },
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  final phoneController = TextEditingController();
+                  return AlertDialog(
+                    title: Text(
+                      "Input Nomor telepon",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    content: TextformProduk(
+                      label: "Nomor WA",
+                      controller: phoneController,
+                      readOnly: false,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          Uint8List pdfData = await formatPdf(order);
+                          String fileName = "invoice_${order["id"]}.pdf";
+
+                          final phoneNumber = phoneController.text.trim();
+                          if (phoneNumber.isEmpty) {
+                            Get.snackbar(
+                              "Error",
+                              "Nomor WA tidak boleh kosong",
+                            );
+                            return;
+                          }
+                          try {
+                            String pdfLink = await uploadPdf(pdfData, fileName);
+
+                            await sendInvoiceWa(phoneNumber, pdfLink);
+
+                            Get.snackbar(
+                              "Sukses",
+                              "Invoice berhasil dikirim ke $phoneNumber",
+                            );
+                            Get.back();
+                          } catch (e) {
+                            Get.snackbar("Error", e.toString());
+                          }
+                        },
+                        child: Text(
+                          "Kirim",
+                          style: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Get.back(),
+                        child: Text(
+                          "Batal",
+                          style: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             child: Ink(
               decoration: BoxDecoration(

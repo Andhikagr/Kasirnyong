@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/controller/produk_control.dart';
-import 'package:food_app/manaj_produk/produk/tambah_produk.dart';
-import 'package:food_app/manaj_produk/produk/edit_produk.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/controller/produk_control.dart';
+import 'package:kasirnyong/manaj_produk/produk/edit_produk.dart';
+import 'package:kasirnyong/manaj_produk/produk/tambah_produk.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
 
 class Produk extends StatefulWidget {
   const Produk({super.key});

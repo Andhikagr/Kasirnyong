@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/homepage/homepage.dart';
-import 'package:food_app/transaksi/lapor_transaksi.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/homepage/homepage.dart';
+import 'package:kasirnyong/transaksi/lapor_transaksi.dart';
 
 class SuksesBayar extends StatelessWidget {
   const SuksesBayar({super.key});

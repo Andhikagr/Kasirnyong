@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_persen.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_persen.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
 
 class TextformProduk extends StatelessWidget {
   final String label;

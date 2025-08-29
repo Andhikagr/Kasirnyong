@@ -1,5 +1,5 @@
-import 'package:food_app/database/database.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:kasirnyong/database/database.dart';
 
 Rx totalOrderHari = 0.obs;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/order/bayar.dart';
-import 'package:food_app/order/pajak.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/order/bayar.dart';
+import 'package:kasirnyong/order/pajak.dart';
 
 class Order extends StatefulWidget {
   final RxList<Map<String, dynamic>> pesananList;

@@ -1,6 +1,7 @@
 //export to csv
 import 'dart:io';
-import 'package:food_app/database/database.dart';
+
+import 'package:kasirnyong/database/database.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
-import 'package:food_app/order/widget/format_pajak.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
+import 'package:kasirnyong/order/widget/format_pajak.dart';
 
 class Pajak extends StatefulWidget {
   const Pajak({super.key});

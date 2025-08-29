@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/database/database.dart';
-import 'package:food_app/homepage/widget/update_transaksi.dart';
-import 'package:food_app/manaj_produk/produk/widget/format_rupiah.dart';
-import 'package:food_app/manaj_produk/produk/widget/textform_produk.dart';
-import 'package:food_app/order/sukses_bayar.dart';
-import 'package:food_app/order/widget/box_order.dart';
 import 'package:get/get.dart';
+import 'package:kasirnyong/database/database.dart';
+import 'package:kasirnyong/homepage/widget/update_transaksi.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
+import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
+import 'package:kasirnyong/order/sukses_bayar.dart';
+import 'package:kasirnyong/order/widget/box_order.dart';
 
 class Bayar extends StatefulWidget {
   final RxString totalBayar;
