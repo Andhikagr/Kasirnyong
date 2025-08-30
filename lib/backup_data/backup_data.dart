@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:kasirnyong/backup_data/widget/backup_service.dart';
 import 'package:kasirnyong/controller/kategori_control.dart';
 import 'package:kasirnyong/controller/produk_control.dart';
-import 'package:kasirnyong/homepage/homepage.dart';
 import 'package:kasirnyong/homepage/widget/box_item.dart';
 import 'package:kasirnyong/splash.dart';
 

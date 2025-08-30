@@ -25,7 +25,6 @@ class _TambahProdukState extends State<TambahProduk> {
   final TextEditingController namaController = TextEditingController();
   final TextEditingController hargaDasarController = TextEditingController();
   final TextEditingController hargaJualController = TextEditingController();
-  final TextEditingController stokController = TextEditingController();
   final TextEditingController diskonController = TextEditingController();
   final TextEditingController hargaDiskonController = TextEditingController();
 
@@ -134,28 +133,14 @@ class _TambahProdukState extends State<TambahProduk> {
                   textsize: 12,
                 ),
                 SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextformProduk(
-                        label: "Stok (opsional)",
-                        controller: stokController,
-                        readOnly: false,
-                        textsize: 12,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: TextformProduk(
-                        label: "Diskon (opsional)",
-                        controller: diskonController,
-                        isDiskon: true,
-                        readOnly: false,
-                        textsize: 12,
-                      ),
-                    ),
-                  ],
+                TextformProduk(
+                  label: "Diskon (opsional)",
+                  controller: diskonController,
+                  isDiskon: true,
+                  readOnly: false,
+                  textsize: 12,
                 ),
+
                 SizedBox(height: 15),
                 TextformProduk(
                   label: "Harga Diskon",
@@ -174,7 +159,7 @@ class _TambahProdukState extends State<TambahProduk> {
                     namaController.clear();
                     hargaDasarController.clear();
                     hargaJualController.clear();
-                    stokController.clear();
+
                     diskonController.clear();
                     gambarPath = null;
                     setState(() {
@@ -331,14 +316,14 @@ class _TambahProdukState extends State<TambahProduk> {
                           kategoriNama: pilihKategoriNama!,
                           hargaDasar: hargaDasarController.text.toDoubleClean(),
                           hargaJual: hargaJualController.text.toDoubleClean(),
-                          stok: int.tryParse(stokController.text) ?? 0,
+
                           diskon: diskonValue,
                           gambar: gambarPath,
                         );
                         namaController.clear();
                         hargaDasarController.clear();
                         hargaJualController.clear();
-                        stokController.clear();
+
                         diskonController.clear();
                         gambarPath = null;
                         setState(() {

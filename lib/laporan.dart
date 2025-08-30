@@ -200,7 +200,7 @@ class _LaporanState extends State<Laporan> {
                         "Produk terlaris hari ini",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ),

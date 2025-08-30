@@ -143,26 +143,13 @@ class _EditProdukState extends State<EditProduk> {
                   readOnly: false,
                 ),
                 SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextformProduk(
-                        label: "Stok (opsional)",
-                        controller: stokController,
-                        readOnly: false,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: TextformProduk(
-                        label: "Diskon (opsional)",
-                        controller: diskonController,
-                        isDiskon: true,
-                        readOnly: false,
-                      ),
-                    ),
-                  ],
+                TextformProduk(
+                  label: "Diskon (opsional)",
+                  controller: diskonController,
+                  isDiskon: true,
+                  readOnly: false,
                 ),
+
                 SizedBox(height: 15),
                 TextformProduk(
                   label: "Harga Diskon",
