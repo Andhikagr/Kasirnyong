@@ -9,6 +9,8 @@ class Print extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        title: Text("Printer"),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(

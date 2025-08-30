@@ -67,6 +67,7 @@ class _ButtonProdukState extends State<ButtonProduk> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(30),
       onTap: () async {
         //tombol ambil kamera
         if (widget.label.toLowerCase().contains("foto")) {

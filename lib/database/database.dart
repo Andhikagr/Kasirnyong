@@ -49,6 +49,8 @@ class DatabaseKasir {
         sub_total_order REAL NOT NULL,
         pajak_persen REAL,
         total_order REAL NOT NULL,
+        nominal REAL NOT NULL,
+        kembalian REAL NOT NULL,
         metode_bayar TEXT NOT NULL
         )
         ''');
@@ -233,6 +235,8 @@ class DatabaseKasir {
   static Future<void> simpanOrder(
     RxList<Map<String, dynamic>> pesananList,
     double pajakPersen,
+    double nominal,
+    double kembalian,
     String metodeBayar,
   ) async {
     final db = await getDB();
@@ -255,6 +259,8 @@ class DatabaseKasir {
         "sub_total_order": subTotalOrder,
         "total_order": totalOrder,
         "pajak_persen": pajakPersen,
+        "nominal": nominal,
+        "kembalian": kembalian,
         "metode_bayar": metodeBayar,
       });
 
@@ -313,6 +319,8 @@ class DatabaseKasir {
         "sub_total_order": order["sub_total_order"],
         "total_order": order["total_order"],
         "pajak_persen": order["pajak_persen"],
+        "nominal": order["nominal"],
+        "kembalian": order["kembalian"],
         "metode_bayar": order["metode_bayar"],
         "details": details,
       });

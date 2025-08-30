@@ -11,7 +11,7 @@ class ProdukControl extends GetxController {
   }
 
   //load data
-  void loadProduk() async {
+  Future<void> loadProduk() async {
     produkList.value = await DatabaseKasir.getProduk();
   }
 

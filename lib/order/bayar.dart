@@ -18,7 +18,7 @@ class Bayar extends StatefulWidget {
 }
 
 class _BayarState extends State<Bayar> {
-  final TextEditingController _tunaiController = TextEditingController();
+  final TextEditingController _nominalController = TextEditingController();
   final TextEditingController _kembalianController = TextEditingController();
   final List<String> metodeBayar = ["Tunai", "QRIS", "Transfer"];
   String? pilihKategori;
@@ -29,20 +29,29 @@ class _BayarState extends State<Bayar> {
   void initState() {
     super.initState();
 
-    _tunaiController.addListener(() {
-      final tunai = _tunaiController.text.toDoubleClean();
+    _nominalController.addListener(() {
+      final tunai = _nominalController.text.toDoubleClean();
       final total = widget.totalBayar.value.toDoubleClean();
       final kembaliHitung = tunai - total;
 
       kembalian.value = kembaliHitung > 0 ? kembaliHitung.toRupiah() : "Rp. 0";
-      setState(() {});
+      //kunci tunai
+      if (_nominalController.text.isNotEmpty) {
+        setState(() {
+          pilihKategori = "Tunai";
+        });
+      } else {
+        setState(() {
+          pilihKategori = null;
+        });
+      }
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _tunaiController.dispose();
+    _nominalController.dispose();
     _kembalianController.dispose();
   }
 
@@ -105,9 +114,10 @@ class _BayarState extends State<Bayar> {
                 ),
                 SizedBox(height: 30),
                 TextformProduk(
-                  label: "Tunai",
-                  controller: _tunaiController,
-                  readOnly: false,
+                  label: "nominal",
+                  controller: _nominalController,
+                  readOnly:
+                      pilihKategori == "QRIS" || pilihKategori == "Transfer",
                   isCurrency: true,
                   textsize: 16,
                 ),
@@ -196,16 +206,23 @@ class _BayarState extends State<Bayar> {
                   onChanged: (value) {
                     setState(() {
                       pilihKategori = value;
+                      //auto isi selain tunai
+                      if (value == "QRIS" || value == "Transfer") {
+                        _nominalController.text = widget.totalBayar.value;
+                      } else if (value == "Tunai") {
+                        _nominalController.clear();
+                      }
                     });
                   },
                 ),
+
                 SizedBox(height: 15),
                 Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(10),
                     onTap: () {
-                      _tunaiController.clear();
+                      _nominalController.clear();
                       setState(() {
                         pilihKategori = null;
                       });
@@ -257,7 +274,7 @@ class _BayarState extends State<Bayar> {
                   if (widget.pesananList.isNotEmpty) {
                     final pajakPersen = await DatabaseKasir.getPajak();
                     if (pilihKategori == null) {
-                      if (_tunaiController.text.isEmpty) {
+                      if (_nominalController.text.isEmpty) {
                         Get.snackbar(
                           "Ups",
                           "Kolom tunai belum di isi",
@@ -278,13 +295,32 @@ class _BayarState extends State<Bayar> {
                       );
                       return;
                     }
+
+                    //cek uang
+                    final tunai = _nominalController.text.toDoubleClean();
+                    final bayar = widget.totalBayar.value.toDoubleClean();
+
+                    if (tunai < bayar && pilihKategori == "Tunai") {
+                      Get.snackbar(
+                        "Pembayaran Kurang",
+                        "Uang tunai masih kurang dari total bayar",
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black,
+                        icon: Icon(Icons.dangerous, color: Colors.red),
+                      );
+                      return;
+                    }
+                    //valid
                     await DatabaseKasir.simpanOrder(
                       widget.pesananList,
                       pajakPersen.toDouble(),
+                      _nominalController.text.toDoubleClean(),
+                      kembalian.value.toDoubleClean(),
                       pilihKategori!,
                     );
 
-                    _tunaiController.clear();
+                    _nominalController.clear();
 
                     setState(() {
                       pilihKategori = null;

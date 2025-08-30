@@ -13,7 +13,7 @@ class KategoriControl extends GetxController {
   }
 
   //load data
-  void loadKategori() async {
+  Future<void> loadKategori() async {
     kategoriList.value = await DatabaseKasir.getKategori();
   }
 

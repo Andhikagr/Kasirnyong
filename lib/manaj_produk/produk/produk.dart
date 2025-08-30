@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirnyong/controller/produk_control.dart';
@@ -88,8 +89,8 @@ class _ProdukState extends State<Produk> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  onPressed: () => Get.to(
+                                GestureDetector(
+                                  onTap: () => Get.to(
                                     () => EditProduk(
                                       produkId: produk["id"],
                                       nama: produk["nama"],
@@ -102,7 +103,24 @@ class _ProdukState extends State<Produk> {
                                       gambar: produk["gambar"],
                                     ),
                                   ),
-                                  icon: Icon(Icons.edit_document, size: 20),
+                                  child: Container(
+                                    height: 25,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Colors.deepPurple,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "edit",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -151,9 +169,9 @@ class _ProdukState extends State<Produk> {
                                     );
                                   },
                                   icon: Icon(
-                                    Icons.delete,
+                                    CupertinoIcons.trash_circle_fill,
                                     color: Colors.red,
-                                    size: 20,
+                                    size: 28,
                                   ),
                                 ),
                               ],
@@ -186,7 +204,10 @@ class _ProdukState extends State<Produk> {
                               children: [
                                 Text(
                                   "Harga Pokok",
-                                  style: TextStyle(fontSize: 11),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Align(
                                   alignment: Alignment.centerLeft,
@@ -195,7 +216,10 @@ class _ProdukState extends State<Produk> {
                                       (produk['harga_dasar'] as num).toRupiah(),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 11),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -206,18 +230,30 @@ class _ProdukState extends State<Produk> {
                               children: [
                                 Text(
                                   "Harga Jual",
-                                  style: TextStyle(fontSize: 11),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   (produk["harga_jual"] as num).toRupiah(),
-                                  style: TextStyle(fontSize: 11),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Diskon", style: TextStyle(fontSize: 11)),
+                                Text(
+                                  "Diskon",
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 Text(
                                   produk["diskon"] != null
                                       ? "${produk["diskon"]!.toInt()}%"
@@ -246,6 +282,7 @@ class _ProdukState extends State<Produk> {
                                               : "-",
                                           style: TextStyle(
                                             color: Colors.red,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 11,
                                           ),
                                         ),
@@ -256,7 +293,10 @@ class _ProdukState extends State<Produk> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       "Belum ada diskon",
-                                      style: TextStyle(fontSize: 11),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                             SizedBox(height: 8),
@@ -282,7 +322,11 @@ class _ProdukState extends State<Produk> {
           );
           produkLoad.loadProduk();
         },
-        child: Icon(Icons.add_box_rounded, color: Colors.white),
+        child: Icon(
+          CupertinoIcons.add_circled_solid,
+          color: Colors.white,
+          size: 30,
+        ),
       ),
     );
   }

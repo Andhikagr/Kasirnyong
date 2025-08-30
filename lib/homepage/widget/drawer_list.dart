@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:googleapis/bigtableadmin/v2.dart';
+import 'package:kasirnyong/backup_data/backup_data.dart';
 import 'package:kasirnyong/laporan.dart';
 import 'package:kasirnyong/manaj_produk/manaj_produk.dart';
 import 'package:kasirnyong/nama.dart';
@@ -16,26 +17,34 @@ class MenuDrawer extends StatelessWidget {
     final List<Map<String, dynamic>> drawerMenu = [
       {
         "label": "Nama Toko",
-        "icon": Icons.storefront_outlined,
+        "icon": Icons.storefront_sharp,
         "page": () => Nama(),
       },
       {
         "label": "Transaksi",
-        "icon": Icons.swap_horiz,
+        "icon": Icons.receipt_long,
         "page": () => LaporTransaksi(),
       },
       {
         "label": "Manajemen Produk",
-        "icon": Icons.inventory,
+        "icon": CupertinoIcons.tray_2_fill,
         "page": () => ManajProduk(),
       },
-      {"label": "Print", "icon": Icons.print, "page": () => Print()},
+      {
+        "label": "Print",
+        "icon": CupertinoIcons.printer_fill,
+        "page": () => Print(),
+      },
       {
         "label": "Laporan Penjualan",
-        "icon": Icons.bar_chart,
+        "icon": CupertinoIcons.doc_text_fill,
         "page": () => Laporan(),
       },
-      {"label": "Backup Data", "icon": Icons.backup, "page": () => Backup()},
+      {
+        "label": "Database",
+        "icon": CupertinoIcons.cloud_fog_fill,
+        "page": () => BackupData(),
+      },
     ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

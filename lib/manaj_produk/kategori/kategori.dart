@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirnyong/controller/kategori_control.dart';
@@ -37,28 +38,27 @@ class _KategoriState extends State<Kategori> {
                   color: Colors.white,
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(10),
+
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      blurRadius: 1,
-                      offset: Offset(3, 2),
-                    ),
+                    BoxShadow(color: Colors.deepPurple.shade200, blurRadius: 1),
                   ],
                 ),
                 child: ListTile(
-                  leading: Icon(Icons.storefront_sharp),
+                  leading: Icon(CupertinoIcons.tag_circle_fill),
                   title: Text(
                     kategori['nama'],
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
+                    icon: Icon(
+                      CupertinoIcons.delete_right_fill,
+                      color: Colors.red,
+                    ),
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            icon: Icon(Icons.warning, color: Colors.red),
                             title: Text(
                               "Apakah kamu yakin?",
                               style: TextStyle(
@@ -164,7 +164,11 @@ class _KategoriState extends State<Kategori> {
           ),
         },
 
-        child: Icon(Icons.add_box_rounded, color: Colors.white),
+        child: Icon(
+          CupertinoIcons.add_circled_solid,
+          color: Colors.white,
+          size: 30,
+        ),
       ),
     );
   }

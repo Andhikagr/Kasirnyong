@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirnyong/database/database.dart';
@@ -178,7 +179,7 @@ class _LaporTransaksiState extends State<LaporTransaksi> {
                 },
               );
             },
-            icon: Icon(Icons.manage_history_sharp),
+            icon: Icon(CupertinoIcons.folder_fill_badge_minus),
             tooltip: "Hapus transaksi",
           ),
         ],

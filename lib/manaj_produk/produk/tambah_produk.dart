@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirnyong/controller/kategori_control.dart';
@@ -226,7 +227,7 @@ class _TambahProdukState extends State<TambahProduk> {
                         children: [
                           ButtonProduk(
                             label: "Pilih Gambar",
-                            icons: Icons.photo,
+                            icons: CupertinoIcons.photo_fill,
                             onImage: (path) {
                               setState(() {
                                 gambarPath = path;
@@ -237,7 +238,7 @@ class _TambahProdukState extends State<TambahProduk> {
                           SizedBox(height: 20),
                           ButtonProduk(
                             label: "Ambil Foto",
-                            icons: Icons.camera_alt,
+                            icons: CupertinoIcons.camera_on_rectangle,
                             onImage: (path) {
                               setState(() {
                                 gambarPath = path;

@@ -25,6 +25,8 @@ Future<Uint8List> formatPdf(Map<String, dynamic> orderInvoice) async {
   final subTotal = (orderInvoice["sub_total_order"] ?? 0) as num;
   final pajak = (orderInvoice["pajak_persen"] ?? 0) as num;
   final total = (orderInvoice["total_order"] ?? 0) as num;
+  final nominal = (orderInvoice["nominal"] ?? 0) as num;
+  final kembali = (orderInvoice["kembalian"] ?? 0) as num;
   final metodeBayar = orderInvoice["metode_bayar"] ?? "-";
 
   final identitas = await DatabaseKasir.getIdentitas();
@@ -172,10 +174,26 @@ Future<Uint8List> formatPdf(Map<String, dynamic> orderInvoice) async {
                         bold: true,
                         fontRegular: ttfRegular,
                       ),
-
-                      pw.Text(
-                        "Metode Bayar : $metodeBayar",
-                        style: pw.TextStyle(fontSize: 10, font: ttfRegular),
+                      infoRow(
+                        "Dibayar",
+                        nominal.toRupiah(),
+                        fontSize: 10,
+                        bold: true,
+                        fontRegular: ttfRegular,
+                      ),
+                      infoRow(
+                        "Kembali",
+                        kembali.toRupiah(),
+                        fontSize: 10,
+                        bold: true,
+                        fontRegular: ttfRegular,
+                      ),
+                      infoRow(
+                        "Metode Bayar",
+                        metodeBayar,
+                        fontSize: 10,
+                        bold: true,
+                        fontRegular: ttfRegular,
                       ),
                     ],
                   ),

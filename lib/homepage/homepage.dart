@@ -88,7 +88,7 @@ class _HomepageState extends State<Homepage> {
             padding: EdgeInsets.only(right: 20),
             child: Obx(
               () => Text(
-                "Transaksi hari ini : ${totalOrderHari.value} item",
+                "${totalOrderHari.value} transaksi",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ),
@@ -425,7 +425,7 @@ class _HomepageState extends State<Homepage> {
             duration: Duration(milliseconds: 300),
           );
         },
-        child: Icon(Icons.point_of_sale, color: Colors.white),
+        child: Icon(Icons.point_of_sale, color: Colors.white, size: 30),
       ),
     );
   }

@@ -1,15 +1,15 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:kasirnyong/manaj_produk/produk/widget/format_rupiah.dart';
 import 'package:kasirnyong/manaj_produk/produk/widget/textform_produk.dart';
 import 'package:kasirnyong/order/widget/format_pajak.dart';
-import 'package:kasirnyong/transaksi/widget/format_kirim.dart';
+import 'package:kasirnyong/transaksi/widget/send_link.dart';
 import 'package:kasirnyong/transaksi/widget/format_pdf.dart';
 import 'package:kasirnyong/transaksi/widget/format_waktu.dart';
 import 'package:kasirnyong/transaksi/widget/info.dart';
+import 'package:kasirnyong/transaksi/widget/share_invoice.dart';
 
 class DetailTransaksi extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -68,6 +68,14 @@ class DetailTransaksi extends StatelessWidget {
                     label: "Total",
                   ),
                   Info(
+                    value: (order["nominal"] as num).toRupiah(),
+                    label: "Dibayar",
+                  ),
+                  Info(
+                    value: (order["kembalian"] as num).toRupiah(),
+                    label: "Kembali",
+                  ),
+                  Info(
                     value: order["metode_bayar"],
                     label: "Metode Pembayaran",
                   ),
@@ -89,6 +97,7 @@ class DetailTransaksi extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+
                 children: [
                   SizedBox(height: 10),
                   Padding(
@@ -150,100 +159,143 @@ class DetailTransaksi extends StatelessWidget {
             ),
           ],
         ),
-        child: Material(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-
-            // onTap: () async {
-            //   await shareInvoice(order);
-            // },
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  final phoneController = TextEditingController();
-                  return AlertDialog(
-                    title: Text(
-                      "Input Nomor telepon",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    content: TextformProduk(
-                      label: "Nomor WA",
-                      controller: phoneController,
-                      readOnly: false,
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () async {
-                          Uint8List pdfData = await formatPdf(order);
-                          String fileName = "invoice_${order["id"]}.pdf";
-
-                          final phoneNumber = phoneController.text.trim();
-                          if (phoneNumber.isEmpty) {
-                            Get.snackbar(
-                              "Error",
-                              "Nomor WA tidak boleh kosong",
-                            );
-                            return;
-                          }
-                          try {
-                            String pdfLink = await uploadPdf(pdfData, fileName);
-
-                            await sendInvoiceWa(phoneNumber, pdfLink);
-
-                            Get.snackbar(
-                              "Sukses",
-                              "Invoice berhasil dikirim ke $phoneNumber",
-                            );
-                            Get.back();
-                          } catch (e) {
-                            Get.snackbar("Error", e.toString());
-                          }
-                        },
-                        child: Text(
-                          "Kirim",
-                          style: TextStyle(
-                            color: Colors.grey.shade800,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Get.back(),
-                        child: Text(
-                          "Batal",
-                          style: TextStyle(
-                            color: Colors.grey.shade800,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            child: Ink(
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Material(
                 borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "Kirim Invoice",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final phoneController = TextEditingController();
+                        return AlertDialog(
+                          title: Text(
+                            "Input Nomor telepon",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          content: TextformProduk(
+                            label: "Nomor WA",
+                            controller: phoneController,
+                            readOnly: false,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                Uint8List pdfData = await formatPdf(order);
+                                String fileName = "invoice_${order["id"]}.pdf";
+
+                                final phoneNumber = phoneController.text.trim();
+                                if (phoneNumber.isEmpty) {
+                                  Get.snackbar(
+                                    "Error",
+                                    "Nomor WA tidak boleh kosong",
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: Colors.white,
+                                    icon: Icon(
+                                      Icons.warning,
+                                      color: Colors.amber,
+                                    ),
+                                    colorText: Colors.grey.shade800,
+                                  );
+                                  return;
+                                }
+
+                                String pdfLink = await uploadPdf(
+                                  pdfData,
+                                  fileName,
+                                );
+
+                                await sendLink(phoneNumber, pdfLink);
+
+                                Get.back();
+                              },
+                              child: Text(
+                                "Kirim",
+                                style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Get.back(),
+                              child: Text(
+                                "Batal",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade800,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Kirim Invoice Link",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Material(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () async {
+                    await shareInvoice(order);
+                  },
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/whatsapp.png", width: 30),
+                          SizedBox(width: 10),
+                          Text(
+                            "Invoice WA",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
